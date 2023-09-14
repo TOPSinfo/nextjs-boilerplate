@@ -17,7 +17,7 @@ export const validateEmail = (email: string) => {
     }
     return false;
 };
-const Login: React.FC = () => {
+const Signup: React.FC = () => {
     const dispatch = useDispatch();
     const loginData = useSelector((state: RootState) => state.loginReducer);
     useEffect(() => {
@@ -45,12 +45,12 @@ const Login: React.FC = () => {
                 <div className="my-4">
                     <div className="text-center">
                         <Typography className="text-[24px] font-[500]">
-                            Login
+                            Signup
                         </Typography>
                         <Typography className="text-[16px] my-[10px] font-[400]">
-                            Don`t have an account yet?{" "}
-                            <Link className="text-[#3e79f7]" href={"/signup"}>
-                                Sign Up
+                           Already have an account?{" "}
+                            <Link className="text-[#3e79f7]" href={"/"}>
+                                Sign In
                             </Link>
                         </Typography>
                     </div>
@@ -103,7 +103,7 @@ const Login: React.FC = () => {
                                         htmlType="submit"
                                         className="mt-[15px] w-[100%] bg-[#3e79f7] hover:bg-[#fff] text-[#fff] text-[14px]"
                                     >
-                                        Sign In
+                                        Sign Up
                                     </Button>
                                 </Form.Item>
                             </Col>
@@ -115,4 +115,4 @@ const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default Signup;

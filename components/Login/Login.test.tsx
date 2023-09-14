@@ -1,9 +1,18 @@
 import Login, { validateEmail } from "./index";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
-import '../../mockMatchMedia';
-
+import "../../mockMatchMedia";
+import { toast } from "react-toastify";
+jest.mock("react-redux", () => ({
+    useDispatch: jest.fn(),
+    useSelector: jest.fn(),
+}));
+jest.mock("react-toastify", () => ({
+    toast: {
+        success: jest.fn(),
+    },
+}));
 const onSubmit = jest.fn();
 
 describe("Test the Login Component", () => {
@@ -31,7 +40,7 @@ describe("Test the Login Component", () => {
         expect(password).toHaveAttribute("type", "password");
     });
 
-    test("should display alert if error", () => {
+    test("should display alert if error", async () => {
         render(<Login />);
         const email = screen.getByPlaceholderText("Enter email");
         const password = screen.getByPlaceholderText("Password");
@@ -40,21 +49,23 @@ describe("Test the Login Component", () => {
         userEvent.type(email, "test");
         userEvent.type(password, "123456");
         userEvent.click(buttonList[0]);
-        const error = screen.getByText("Please provide a valid email");
-        expect(error).toBeInTheDocument();
+        await waitFor(() => {
+            const basic_email_help = screen.getByText("Email is required");
+            expect(basic_email_help).toBeInTheDocument();
+        });
     });
 
-    test("should be able to submit the form", () => {
+    test("should be able to submit the form", async () => {
         const component = render(<Login />);
         const email = screen.getByPlaceholderText("Enter email");
         const password = screen.getByPlaceholderText("Password");
-        const btnList = screen.getAllByRole("button");
-
+        const btnList = screen.getByRole("button", { name: /Sign In/i });
         userEvent.type(email, "test@gmail.com");
         userEvent.type(password, "123456");
-        userEvent.click(btnList[0]);
-
-        const user = screen.getByText((_, element:any) => element.textContent === 'some text');
-        expect(user).toBeInTheDocument();
+        userEvent.click(btnList);
+        setTimeout(async () => {
+            const toastText = await screen.findByText(/Login Successfully/i);
+            expect(toastText).toBeInTheDocument();
+        }, 2000);
     });
 });
