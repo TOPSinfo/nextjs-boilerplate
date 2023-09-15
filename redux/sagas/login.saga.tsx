@@ -7,10 +7,7 @@ import {
     logout,
 } from "../actions/login.action";
 import { LOGIN_REQUEST, LOGOUT } from "../constant";
-interface loginSaga {
-    user: Object;
-    error: string;
-}
+
 // create a login Request saga
 export function* loginRequestSaga(
     action: ReturnType<typeof loginRequest>
@@ -21,7 +18,7 @@ export function* loginRequestSaga(
             password: action.payload.password,
         };
         return await axios
-            .post("/posts", userData)
+            .post("/login", userData)
             .then(response => response.data)
             .catch(err => {
                 throw err;

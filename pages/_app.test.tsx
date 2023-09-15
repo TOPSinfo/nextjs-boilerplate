@@ -2,18 +2,13 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
-import { wrapper, store } from "../redux/store";
 import mockRouter from "next-router-mock"; // Import mockNextRouter
 import App from "./_app";
 import "@testing-library/jest-dom";
-import {
-    BrowserRouter,
-    BrowserRouter as Route, // <-- Whoopsies!
-    Routes
-  } from 'react-router-dom';
+
 // Mock the ToastHelper component to prevent side effects during testing
 // eslint-disable-next-line react/display-name
-jest.mock("@/helpers/toast.helper", () => () => (
+jest.mock("../helpers/toast.helper", () => () => (
     <div data-testid="toast-helper-mock" />
 ));
 
@@ -23,14 +18,14 @@ const mockStore = configureStore([]);
 // Define initial state for your Redux store if needed
 const initialState = {};
 const componentDiv = () => {
-    return(<></>)
-}
+    return <></>;
+};
 describe("App Component", () => {
     beforeAll(() => {
         // Mock the Next.js router using mockNextRouter
         mockRouter.push("/");
     });
-
+   
     it("should render without errors", () => {
         // Create a mock store with your initial state
         const store = mockStore(initialState);
@@ -41,7 +36,11 @@ describe("App Component", () => {
         // Render the App component with the mock store
         const { getByTestId } = render(
             <Provider store={store}>
-                <App />
+                <App
+                    pageProps={mockPageProps}
+                    Component={componentDiv}
+                    router={""}
+                />
             </Provider>
         );
 

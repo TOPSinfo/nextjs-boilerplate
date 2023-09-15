@@ -1,15 +1,33 @@
 import React, { useEffect } from "react";
-import { Button, Card, Col, Form, Input, Row, Typography } from "antd";
+import {
+    Button,
+    Card,
+    Checkbox,
+    Col,
+    Form,
+    Input,
+    Radio,
+    Row,
+    Select,
+    Typography,
+} from "antd";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { loginRequest } from "@/redux/actions/login.action";
 import { RootState } from "../../redux/store";
+import { useRouter } from "next/router";
+import { signupRequest } from "@/redux/actions/signup.action";
+const { Option } = Select;
 type User = {
     email: string;
     password: string;
+    username: string;
+    phone: string;
+    gender: string;
+    cnfPassword: string;
+    agreement: boolean;
 };
-
+// for validation purposes in test cases
 export const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (regex.test(email)) {
@@ -19,27 +37,49 @@ export const validateEmail = (email: string) => {
 };
 const Signup: React.FC = () => {
     const dispatch = useDispatch();
-    const loginData = useSelector((state: RootState) => state.loginReducer);
-    useEffect(() => {
-        console.log("isLoggedIn", loginData?.isLoggedIn, loginData?.error);
-        if (loginData?.error) {
-            toast.error(loginData?.error);
-        } else if (loginData?.isLoggedIn) {
-            // show sucess message after login
-            toast.success("Login Successfully");
-        }
-    }, [loginData]);
+    const router = useRouter();
+    const signupData = useSelector((state: RootState) => state.signupReducer);
 
-    const handleSubmit = (values: { email: string; password: string }) => {
+    // phone number prefix selector
+    const prefixSelector = (
+        <Form.Item name="prefix" noStyle>
+            <Select style={{ width: 70 }}>
+                <Option value="91">+91</Option>
+                <Option value="1">+1</Option>
+            </Select>
+        </Form.Item>
+    );
+
+    // Form Item layout for the agreement checkbox
+    const tailFormItemLayout = {
+        wrapperCol: {
+            xs: {
+                span: 24,
+                offset: 0,
+            },
+        },
+    };
+    // after clicking on the button, this method will execute
+    useEffect(() => {
+        console.log("signupData", signupData?.user, signupData?.error);
+        if (signupData?.error) {
+            toast.error(signupData?.error);
+        } else if (signupData?.user) {
+            // show sucess message after registration
+            toast.success("Registration Successfully");
+            router.push("/");
+        }
+    }, [router, signupData]);
+
+    const handleSubmit = (values: User) => {
         console.log(values, "test@gmail.com");
-        // toast.success("Login Successfully");
         // call login request method from action file
-        dispatch(loginRequest(values.email, values.password));
+        dispatch(signupRequest(values));
     };
     return (
-        <div className=" h-screen bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto">
+        <div className="bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto">
             <Card
-                className="font-poppins w-[100%] max-w-[500px]"
+                className="font-poppins my-[20px] w-[100%] max-w-[500px]"
                 bordered={false}
             >
                 <div className="my-4">
@@ -48,7 +88,7 @@ const Signup: React.FC = () => {
                             Signup
                         </Typography>
                         <Typography className="text-[16px] my-[10px] font-[400]">
-                           Already have an account?{" "}
+                            Already have an account?{" "}
                             <Link className="text-[#3e79f7]" href={"/"}>
                                 Sign In
                             </Link>
@@ -56,13 +96,32 @@ const Signup: React.FC = () => {
                     </div>
                     <Form
                         name="basic"
+                        initialValues={{ prefix: "91" }}
                         onFinish={handleSubmit}
                         autoComplete="off"
                     >
                         <Row>
                             <Col xs={24}>
                                 <p className="text-[14px] font-poppins text-left font-[400]">
-                                    Email
+                                    Username{" "}
+                                    <span className="text-red-600">*</span>
+                                </p>
+                                <Form.Item<User>
+                                    name="username"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Username is required",
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="Enter Username" />
+                                </Form.Item>
+                            </Col>
+                            <Col xs={24}>
+                                <p className="text-[14px] font-poppins text-left font-[400]">
+                                    Email{" "}
+                                    <span className="text-red-600">*</span>
                                 </p>
                                 <Form.Item<User>
                                     name="email"
@@ -78,19 +137,73 @@ const Signup: React.FC = () => {
                                         },
                                     ]}
                                 >
-                                    <Input placeholder="Enter email" />
+                                    <Input placeholder="Enter Email" />
                                 </Form.Item>
                             </Col>
                             <Col xs={24}>
+                                <p className="text-[14px] font-poppins text-left font-[400]">
+                                    Phone Number{" "}
+                                    <span className="text-red-600">*</span>
+                                </p>
+                                <Form.Item<User>
+                                    name="phone"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Phone number is required",
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        addonBefore={prefixSelector}
+                                        placeholder="Enter Phone Number"
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col xs={24}>
+                                <p className="text-[14px] font-poppins text-left font-[400]">
+                                    Gender{" "}
+                                    <span className="text-red-600">*</span>
+                                </p>
+                                <Form.Item<User>
+                                    name="gender"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Gender is required",
+                                        },
+                                    ]}
+                                >
+                                    <Radio.Group>
+                                        <Radio value="female"> Female </Radio>
+                                        <Radio value="male"> Male </Radio>
+                                    </Radio.Group>
+                                </Form.Item>
+                            </Col>
+
+                            <Col xs={24}>
                                 <p className="text-[14px] mt-[10px] font-poppins text-left font-[400]">
-                                    Password
+                                    Password{" "}
+                                    <span className="text-red-600">*</span>
                                 </p>
                                 <Form.Item<User>
                                     name="password"
                                     rules={[
                                         {
                                             required: true,
-                                            message: "Password is required!",
+                                            message: "Password is required",
+                                        },
+                                        {
+                                            min: 8,
+                                            message:
+                                                "Password must have a minimum length of 8",
+                                        },
+                                        {
+                                            pattern: new RegExp(
+                                                "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
+                                            ),
+                                            message:
+                                                "Password must contain at least one lowercase letter, uppercase letter, number, and special character",
                                         },
                                     ]}
                                 >
@@ -98,9 +211,69 @@ const Signup: React.FC = () => {
                                 </Form.Item>
                             </Col>
                             <Col xs={24}>
+                                <p className="text-[14px] mt-[10px] font-poppins text-left font-[400]">
+                                    Confirm Password{" "}
+                                    <span className="text-red-600">*</span>
+                                </p>
+                                <Form.Item<User>
+                                    name="cnfPassword"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                "Confirm Password is required",
+                                        },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                if (
+                                                    !value ||
+                                                    getFieldValue(
+                                                        "password"
+                                                    ) === value
+                                                ) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(
+                                                    new Error(
+                                                        "Confirm Password did not matched!"
+                                                    )
+                                                );
+                                            },
+                                        }),
+                                    ]}
+                                >
+                                    <Input.Password placeholder="Confirm Password" />
+                                </Form.Item>
+                            </Col>
+                            <Col xs={24}>
+                                <Form.Item
+                                    name="agreement"
+                                    valuePropName="checked"
+                                    rules={[
+                                        {
+                                            validator: (_, value) =>
+                                                value
+                                                    ? Promise.resolve()
+                                                    : Promise.reject(
+                                                          new Error(
+                                                              "You have to accept the agreement"
+                                                          )
+                                                      ),
+                                        },
+                                    ]}
+                                    {...tailFormItemLayout}
+                                >
+                                    <Checkbox>
+                                        I have read the Agreement of Terms &
+                                        Policies
+                                    </Checkbox>
+                                </Form.Item>
+                            </Col>
+                            <Col xs={24}>
                                 <Form.Item>
                                     <Button
                                         htmlType="submit"
+                                        data-testid="form"
                                         className="mt-[15px] w-[100%] bg-[#3e79f7] hover:bg-[#fff] text-[#fff] text-[14px]"
                                     >
                                         Sign Up
