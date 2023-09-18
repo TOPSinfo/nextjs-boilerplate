@@ -4,9 +4,11 @@ import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import "../../mockMatchMedia";
 
+jest.mock("next/router", () => jest.requireActual("next-router-mock"));
 jest.mock("react-redux", () => ({
     useDispatch: jest.fn(),
     useSelector: jest.fn(),
+    useRouter: jest.fn(),
 }));
 jest.mock("react-toastify", () => ({
     toast: {

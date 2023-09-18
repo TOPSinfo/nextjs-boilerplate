@@ -3,13 +3,13 @@ import { AuthActionTypes } from "../actions/signup.action";
 export interface AuthState {
     user: Object | null;
     error: string | null;
-    isLoading: boolean;
+    loading: boolean;
 }
 
 const initialState: AuthState = {
     user: null,
     error: null,
-    isLoading: false,
+    loading: false,
 };
 
 const signupReducer = (state = initialState, action: AuthActionTypes) => {
@@ -17,20 +17,20 @@ const signupReducer = (state = initialState, action: AuthActionTypes) => {
         case SIGNUP_REQUEST:
             return {
                 ...state,
-                isLoading: true,
+                loading: true,
                 error: null,
             };
         case SIGNUP_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
+                loading: false,
                 user: action.payload.user,
                 error: null,
             };
         case SIGNUP_FAIL:
             return {
                 ...state,
-                isLoading: false,
+                loading: false,
                 user: null,
                 error: action.payload.error,
             };

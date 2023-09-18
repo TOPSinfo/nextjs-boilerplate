@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Card, Col, Form, Input, Row, Typography } from "antd";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { loginRequest } from "@/redux/actions/login.action";
-import { RootState } from "../../redux/store";
-import { useRouter } from "next/router";
+import { forgotRequest } from "@/redux/actions/forgot.action";
+import { RootState } from "@/redux/store";
 import Loader from "../Loader";
 type User = {
     email: string;
@@ -19,27 +17,19 @@ export const validateEmail = (email: string) => {
     }
     return false;
 };
-const Login: React.FC = () => {
+const ForgotPassword: React.FC = () => {
     const dispatch = useDispatch();
-    const router = useRouter();
-    const loginData = useSelector((state: RootState) => state.loginReducer);
-    useEffect(() => {
-        console.log("isLoggedIn", loginData?.isLoggedIn, loginData?.error);
-        if (loginData?.isLoggedIn) {
-            // redirect to dashboard page after login
-            router.push("/dashboard");
-        }
-    }, [loginData, router]);
+    const forgotData = useSelector((state: RootState) => state.forgotReducer);
 
-    const handleSubmit = (values: { email: string; password: string }) => {
+    const handleSubmit = (values: { email: string }) => {
         console.log(values, "test@gmail.com");
-        toast.success("Login Successfully");
+        // toast.success("Send Email Successfully");
         // call login request method from action file
-        // dispatch(loginRequest(values.email, values.password));
+        dispatch(forgotRequest(values.email));
     };
     return (
         <div className=" h-screen bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto">
-            {loginData?.loading ? (
+            {forgotData?.loading ? (
                 <Loader />
             ) : (
                 <Card
@@ -49,20 +39,12 @@ const Login: React.FC = () => {
                     <div className="my-4">
                         <div className="text-center">
                             <Typography className="text-[24px] font-[500]">
-                                Login
-                            </Typography>
-                            <Typography className="text-[16px] my-[10px] font-[400]">
-                                Don`t have an account yet?{" "}
-                                <Link
-                                    className="text-[#3e79f7]"
-                                    href={"/signup"}
-                                >
-                                    Sign Up
-                                </Link>
+                                Forgot Password?
                             </Typography>
                         </div>
                         <Form
                             name="basic"
+                            aria-label="basic"
                             onFinish={handleSubmit}
                             autoComplete="off"
                         >
@@ -88,37 +70,23 @@ const Login: React.FC = () => {
                                         <Input placeholder="Enter email" />
                                     </Form.Item>
                                 </Col>
-                                <Col xs={24}>
-                                    <p className="text-[14px] mt-[10px] font-poppins text-left font-[400]">
-                                        Password
-                                    </p>
-                                    <Form.Item<User>
-                                        name="password"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Password is required!",
-                                            },
-                                        ]}
-                                    >
-                                        <Input.Password placeholder="Password" />
-                                    </Form.Item>
-                                </Col>
+
                                 <Col xs={24}>
                                     <Form.Item>
                                         <Button
                                             htmlType="submit"
                                             className="mt-[15px] w-[100%] bg-[#3e79f7] hover:bg-[#fff] text-[#fff] text-[14px]"
                                         >
-                                            Sign In
+                                            Send
                                         </Button>
-                                        <Link
-                                            className="text-[#3e79f7]"
-                                            href="/forgot-password"
-                                        >
-                                            Forgot Password?
-                                        </Link>
+                                        <Typography className="text-[14px] text-center my-[10px] font-[400]">
+                                            <Link
+                                                className="text-[#4980FF]"
+                                                href={"/"}
+                                            >
+                                                Back to Sign In
+                                            </Link>
+                                        </Typography>
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -130,4 +98,4 @@ const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default ForgotPassword;

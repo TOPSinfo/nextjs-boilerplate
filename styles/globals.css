@@ -37,3 +37,6 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+.ant-spin-dot {
+  color: #1151e3;
+}

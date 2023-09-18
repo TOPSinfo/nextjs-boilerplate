@@ -17,7 +17,7 @@ type User = {
     cnfPassword: string;
     agreement: boolean;
 };
-// create a signup Request saga
+// call the signup api here
 export const apiCall = async (user: User) => {
     const userData = user;
     // add the api URL & parameters
@@ -28,6 +28,8 @@ export const apiCall = async (user: User) => {
             throw err;
         });
 };
+
+// create a signup Request saga
 export function* signupRequestSaga(
     action: ReturnType<typeof signupRequest>
 ): any {
@@ -41,12 +43,10 @@ export function* signupRequestSaga(
             toast.error(data?.message);
             yield put(signupFail(data));
         }
-        return Promise.resolve(data);
     } catch (err: any) {
         console.log("Error");
         toast.error(err.message);
         yield put(signupFail(err.message));
-        return Promise.reject(err);
     }
 }
 
