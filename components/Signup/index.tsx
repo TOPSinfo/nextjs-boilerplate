@@ -39,7 +39,6 @@ const Signup: React.FC = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const signupData = useSelector((state: RootState) => state.signupReducer);
-
     // phone number prefix selector
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
@@ -59,14 +58,10 @@ const Signup: React.FC = () => {
             },
         },
     };
-    // after clicking on the button, this method will execute
+
     useEffect(() => {
-        console.log("signupData", signupData?.user, signupData?.error);
-        if (signupData?.error) {
-            toast.error(signupData?.error);
-        } else if (signupData?.user) {
-            // show sucess message after registration
-            toast.success("Registration Successfully");
+        console.log("signupData", signupData);
+        if (signupData?.user) {
             router.push("/");
         }
     }, [router, signupData]);

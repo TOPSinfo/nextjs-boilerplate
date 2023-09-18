@@ -6,6 +6,7 @@ import {
     signupSuccess,
 } from "../actions/signup.action";
 import { SIGNUP_REQUEST } from "../constant";
+import { toast } from "react-toastify";
 
 type User = {
     email: string;
@@ -15,10 +16,11 @@ type User = {
     gender: string;
     cnfPassword: string;
     agreement: boolean;
-}
+};
 // create a signup Request saga
-export const  apiCall = async (user: User) => {
+export const apiCall = async (user: User) => {
     const userData = user;
+    // add the api URL & parameters
     return await axios
         .post("https://dummyjson.com/auth/signup", userData)
         .then(response => response.data)
@@ -34,11 +36,17 @@ export function* signupRequestSaga(
         const data = yield response.json();
         if (response.status === 200) {
             yield put(signupSuccess(data));
+            toast.success("Registration Successfully");
         } else {
+            toast.error(data?.message);
             yield put(signupFail(data));
         }
+        return Promise.resolve(data);
     } catch (err: any) {
+        console.log("Error");
+        toast.error(err.message);
         yield put(signupFail(err.message));
+        return Promise.reject(err);
     }
 }
 

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { loginRequest } from "@/redux/actions/login.action";
 import { RootState } from "../../redux/store";
+import { useRouter } from "next/router";
 type User = {
     email: string;
     password: string;
@@ -19,16 +20,15 @@ export const validateEmail = (email: string) => {
 };
 const Login: React.FC = () => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const loginData = useSelector((state: RootState) => state.loginReducer);
     useEffect(() => {
         console.log("isLoggedIn", loginData?.isLoggedIn, loginData?.error);
-        if (loginData?.error) {
-            toast.error(loginData?.error);
-        } else if (loginData?.isLoggedIn) {
-            // show sucess message after login
-            toast.success("Login Successfully");
+        if (loginData?.isLoggedIn) {
+            // redirect to dashboard page after login
+            router.push("/dashboard");
         }
-    }, [loginData]);
+    }, [loginData, router]);
 
     const handleSubmit = (values: { email: string; password: string }) => {
         console.log(values, "test@gmail.com");
@@ -105,6 +105,12 @@ const Login: React.FC = () => {
                                     >
                                         Sign In
                                     </Button>
+                                    <Link
+                                        className="text-[#3e79f7]"
+                                        href="/forgot-password"
+                                    >
+                                        Forgot Password?
+                                    </Link>
                                 </Form.Item>
                             </Col>
                         </Row>
