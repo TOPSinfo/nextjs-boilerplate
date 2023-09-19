@@ -30,7 +30,7 @@ jest.mock("../../redux/sagas/reset.saga", () => ({
 const onSubmit = jest.fn();
 
 describe("Test the Reset Password Component", () => {
-    test("render the forgot form on the screen", async () => {
+    test("render the reset form on the screen", async () => {
         render(<ResetPassword />);
         expect(screen.getByText("Reset Password")).toBeInTheDocument();
         const text = screen.getByText("New Password");

@@ -34,6 +34,8 @@ const Login: React.FC = () => {
     const handleSubmit = (values: { email: string; password: string }) => {
         console.log(values, "test@gmail.com");
         toast.success("Login Successfully");
+        router.push('/dashboard');
+        localStorage.setItem("isLoggedIn", "true");
         // call login request method from action file
         // dispatch(loginRequest(values.email, values.password));
     };

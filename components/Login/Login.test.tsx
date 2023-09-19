@@ -1,5 +1,5 @@
 import Login, { validateEmail } from "./index";
-import {  render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import "../../mockMatchMedia";
@@ -18,6 +18,13 @@ jest.mock("react-toastify", () => ({
 const onSubmit = jest.fn();
 
 describe("Test the Login Component", () => {
+    test("render the reset form on the screen", async () => {
+        render(<Login />);
+        expect(screen.getByText("Login")).toBeInTheDocument();
+        const text = screen.getByText("Password");
+        expect(text).toBeInTheDocument();
+        expect(screen.getByText("Email")).toBeInTheDocument();
+    });
     test("render the login form submit button on the screen", async () => {
         render(<Login />);
         const buttonList = await screen.findAllByRole("button");
