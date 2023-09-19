@@ -50,40 +50,18 @@ describe("Test the ForgotPassword Component", () => {
     });
 
     test("should display alert if error", async () => {
-        // jest.useFakeTimers();
-
-        const { getByTestId, queryByText } = render(<ForgotPassword />);
-        // const email = screen.getByPlaceholderText("Enter email");
-        // screen.getByRole("form", { name: "basic" }).onsubmit = onSubmit;
-
-        // fireEvent.change(screen.getByPlaceholderText("Enter email"), {
-        //     target: { value: "!test" },
-        // });
-        // fireEvent.blur(email);
-        // fireEvent.click(screen.getByRole("button", { name: "Send" }));
-        // await waitFor(async () => {
-        //     jest.advanceTimersByTime(1500);
-        //     await expect(screen.getByText("Email is required")).toBeInTheDocument();
-        // });
-        // Submit the form
-        //   fireEvent.click(screen.getByRole("button", { name: "Send" }));
-        //   console.log(onSubmit)
-        //   // Expectations for form submission
-        //   expect(onSubmit).not.toHaveBeenCalled();
-
+        render(<ForgotPassword />);
         const email = screen.getByPlaceholderText("Enter email");
         const buttonList = screen.getAllByRole("button");
 
         userEvent.type(email, "test");
         userEvent.click(buttonList[0]);
-
-        await act(async () => {
-            setTimeout(() => {
-                expect(
-                    screen.getByText("Email is required")
-                ).toBeInTheDocument();
-            }, 1000);
-        });
+        setTimeout(async () => {
+            const basic_email_help = await screen.getByText(
+                "Email is required"
+            );
+            expect(basic_email_help).toBeInTheDocument();
+        }, 1000);
     });
     test("should link", async () => {
         render(<ForgotPassword />);
@@ -108,7 +86,7 @@ describe("Test the ForgotPassword Component", () => {
         });
     });
 
-    // Add test cases for submitting the form
+    // Add test cases for api call when user submit form
     // describe("dispatch Submit button", () => {
     //     test("dispatches FORGOT_REQUEST action on form submission", async () => {
     //         const { getByTestId } = render(<ForgotPassword />);
