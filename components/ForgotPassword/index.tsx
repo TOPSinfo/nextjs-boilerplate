@@ -7,7 +7,6 @@ import { RootState } from "@/redux/store";
 import Loader from "../Loader";
 type User = {
     email: string;
-    password: string;
 };
 
 export const validateEmail = (email: string) => {
@@ -38,7 +37,7 @@ const ForgotPassword: React.FC = () => {
                 >
                     <div className="my-4">
                         <div className="text-center">
-                            <Typography className="text-[24px] font-[500]">
+                            <Typography className="text-[24px] font-[600]">
                                 Forgot Password?
                             </Typography>
                         </div>
@@ -51,7 +50,7 @@ const ForgotPassword: React.FC = () => {
                             <Row>
                                 <Col xs={24}>
                                     <p className="text-[14px] font-poppins text-left font-[400]">
-                                        Email
+                                        Email <span className="text-red-600">*</span>
                                     </p>
                                     <Form.Item<User>
                                         name="email"
@@ -75,7 +74,7 @@ const ForgotPassword: React.FC = () => {
                                     <Form.Item>
                                         <Button
                                             htmlType="submit"
-                                            className="mt-[15px] w-[100%] bg-[#3e79f7] hover:bg-[#fff] text-[#fff] text-[14px]"
+                                            className="mt-[15px] font-[600] w-[100%] bg-[#3e79f7] hover:bg-[#fff] text-[#fff] text-[14px]"
                                         >
                                             Send
                                         </Button>

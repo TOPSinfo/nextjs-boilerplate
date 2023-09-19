@@ -3,6 +3,7 @@ import { all, delay } from "redux-saga/effects";
 import { watchLoginRequest, watchLogout } from "./login.saga";
 import { watchSignupRequest } from "./signup.saga";
 import { watchForgotRequest } from "./forgot.saga";
+import { watchResetRequest } from "./reset.saga";
 
 // Our worker Saga: will perform the async increment task
 export function* helloSaga() {
@@ -19,5 +20,6 @@ export default function* rootSaga() {
         watchSignupRequest(),
         watchLogout(),
         watchForgotRequest(),
+        watchResetRequest(),
     ]);
 }

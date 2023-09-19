@@ -48,7 +48,7 @@ const Login: React.FC = () => {
                 >
                     <div className="my-4">
                         <div className="text-center">
-                            <Typography className="text-[24px] font-[500]">
+                            <Typography className="text-[24px] font-[600]">
                                 Login
                             </Typography>
                             <Typography className="text-[16px] my-[10px] font-[400]">
@@ -69,7 +69,7 @@ const Login: React.FC = () => {
                             <Row>
                                 <Col xs={24}>
                                     <p className="text-[14px] font-poppins text-left font-[400]">
-                                        Email
+                                        Email <span className="text-red-600">*</span>
                                     </p>
                                     <Form.Item<User>
                                         name="email"
@@ -90,7 +90,7 @@ const Login: React.FC = () => {
                                 </Col>
                                 <Col xs={24}>
                                     <p className="text-[14px] mt-[10px] font-poppins text-left font-[400]">
-                                        Password
+                                        Password <span className="text-red-600">*</span>
                                     </p>
                                     <Form.Item<User>
                                         name="password"
@@ -109,7 +109,7 @@ const Login: React.FC = () => {
                                     <Form.Item>
                                         <Button
                                             htmlType="submit"
-                                            className="mt-[15px] w-[100%] bg-[#3e79f7] hover:bg-[#fff] text-[#fff] text-[14px]"
+                                            className="mt-[15px] w-[100%] bg-[#3e79f7] hover:bg-[#fff] font-[600] text-[#fff] text-[14px]"
                                         >
                                             Sign In
                                         </Button>

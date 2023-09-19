@@ -85,7 +85,7 @@ const Signup: React.FC = () => {
                 >
                     <div className="my-4">
                         <div className="text-center">
-                            <Typography className="text-[24px] font-[500]">
+                            <Typography className="text-[24px] font-[600]">
                                 Signup
                             </Typography>
                             <Typography className="text-[16px] my-[10px] font-[400]">
@@ -279,7 +279,7 @@ const Signup: React.FC = () => {
                                         <Button
                                             htmlType="submit"
                                             data-testid="form"
-                                            className="mt-[15px] w-[100%] bg-[#3e79f7] hover:bg-[#fff] text-[#fff] text-[14px]"
+                                            className="mt-[15px] font-[600] w-[100%] bg-[#3e79f7] hover:bg-[#fff] text-[#fff] text-[14px]"
                                         >
                                             Sign Up
                                         </Button>

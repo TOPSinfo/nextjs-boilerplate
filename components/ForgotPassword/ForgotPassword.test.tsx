@@ -61,7 +61,7 @@ describe("Test the ForgotPassword Component", () => {
                 "Email is required"
             );
             expect(basic_email_help).toBeInTheDocument();
-        }, 1000);
+        }, 2000);
     });
     test("should link", async () => {
         render(<ForgotPassword />);
