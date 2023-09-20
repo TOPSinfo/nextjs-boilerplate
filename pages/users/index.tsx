@@ -3,12 +3,12 @@ import Layout from "@/components/Layout";
 import React from "react";
 import withAuth from "@/helpers/withAuth";
 
-const DashboardPage: React.FC = () => {
+const UsersPage: React.FC = () => {
     return (
         <Layout title="Dashboard">
-            <Dashboard />
+            <h1>Hello World</h1>
         </Layout>
     );
 };
 
-export default withAuth(DashboardPage);
+export default withAuth(UsersPage);

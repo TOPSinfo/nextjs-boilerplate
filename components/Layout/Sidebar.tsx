@@ -7,26 +7,21 @@ import {
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 // components/Layout.tsx
 const Sidebar: React.FC = () => {
     const router = useRouter();
-    const [path, setPath] = useState<string>("");
+    const pathname = usePathname();
+
     const handleClick: MenuProps["onClick"] = e => {
-        console.log(e, "e");
         router.push(e.key);
     };
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            setPath(window.location.pathname);
-        }
-    }, []);
-
-    console.log("path", path);
     return (
         <div>
             <Layout.Sider
                 className="sidebar"
+                data-testid="sidebar"
                 breakpoint={"lg"}
                 theme="light"
                 collapsedWidth={0}
@@ -34,15 +29,18 @@ const Sidebar: React.FC = () => {
             >
                 <Menu
                     mode="inline"
+                    data-testid="ant-menu"
                     className="h-[90vh] overflow-auto	"
                     items={[
                         {
                             label: "Dashboard",
+                            title: "Dashboard",
                             key: "/dashboard",
                             icon: <DashboardOutlined />,
                         },
                         {
                             label: "Users",
+                            title: "Users",
                             key: "/users",
                             icon: <UserOutlined />,
                         },
@@ -52,7 +50,7 @@ const Sidebar: React.FC = () => {
                             icon: <FormOutlined />,
                         },
                     ]}
-                    defaultSelectedKeys={["/dashboard"]}
+                    defaultSelectedKeys={[pathname]}
                     onClick={handleClick}
                 ></Menu>
             </Layout.Sider>

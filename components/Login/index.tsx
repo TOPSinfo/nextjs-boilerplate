@@ -26,16 +26,18 @@ const Login: React.FC = () => {
     useEffect(() => {
         console.log("isLoggedIn", loginData?.isLoggedIn, loginData?.error);
         if (loginData?.isLoggedIn) {
-            // redirect to dashboard page after login
+            // redirect to dashboard page after login when we integrate API
             router.push("/dashboard");
         }
     }, [loginData, router]);
 
     const handleSubmit = (values: { email: string; password: string }) => {
         console.log(values, "test@gmail.com");
+        // after integrating the API remove this code from here & move to saga
         toast.success("Login Successfully");
-        router.push('/dashboard');
+        router.push("/dashboard");
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("user", JSON.stringify(values));
         // call login request method from action file
         // dispatch(loginRequest(values.email, values.password));
     };
@@ -71,7 +73,8 @@ const Login: React.FC = () => {
                             <Row>
                                 <Col xs={24}>
                                     <p className="text-[14px] font-poppins text-left font-[400]">
-                                        Email <span className="text-red-600">*</span>
+                                        Email{" "}
+                                        <span className="text-red-600">*</span>
                                     </p>
                                     <Form.Item<User>
                                         name="email"
@@ -92,7 +95,8 @@ const Login: React.FC = () => {
                                 </Col>
                                 <Col xs={24}>
                                     <p className="text-[14px] mt-[10px] font-poppins text-left font-[400]">
-                                        Password <span className="text-red-600">*</span>
+                                        Password{" "}
+                                        <span className="text-red-600">*</span>
                                     </p>
                                     <Form.Item<User>
                                         name="password"

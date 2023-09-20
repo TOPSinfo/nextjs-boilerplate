@@ -48,7 +48,13 @@ export function* watchLoginRequest() {
     yield takeEvery(LOGIN_REQUEST, loginRequestSaga);
 }
 
+export function* logoutSaga(action: ReturnType<typeof logout>) {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user");
+    window.location.href = "/";
+}
+
 export function* watchLogout() {
-    yield takeEvery(LOGOUT, logout);
     console.log("LOGOUT");
+    yield takeEvery(LOGOUT, logoutSaga);
 }

@@ -1,14 +1,21 @@
-import { Dropdown, Layout, Menu, Typography } from "antd";
+import { Dropdown, Layout, Typography } from "antd";
 import Image from "next/image";
 import React from "react";
 import type { MenuProps } from "antd";
 import { logout } from "@/redux/actions/login.action";
+import Link from "next/link";
+import { useDispatch } from "react-redux";
 
 const { Header } = Layout;
-const AppHeader: React.FC = () => {
+const AppHeader = () => {
+    const dispatch = useDispatch();
     const items: MenuProps["items"] = [
         {
-            label: <a href="/dashboard">Profile</a>,
+            label: (
+                <Link href="/dashboard">
+                    <Typography>Profile</Typography>
+                </Link>
+            ),
             key: "0",
         },
         {
@@ -18,8 +25,7 @@ const AppHeader: React.FC = () => {
             label: (
                 <a
                     onClick={() => {
-                        logout();
-                        localStorage.removeItem("isLoggedIn");
+                        dispatch(logout());
                     }}
                 >
                     Logout
@@ -30,7 +36,10 @@ const AppHeader: React.FC = () => {
     ];
     return (
         <>
-            <Header className="bg-[#fff] border-b flex justify-between">
+            <Header
+                data-testid="app-header"
+                className="bg-[#fff] border-b flex justify-between"
+            >
                 <div className="pt-[15px]">
                     {" "}
                     <Image
@@ -43,6 +52,7 @@ const AppHeader: React.FC = () => {
                 </div>
                 <Dropdown menu={{ items }} trigger={["click"]}>
                     <div
+                        data-testid="profile-dropdown"
                         onClick={e => e.preventDefault()}
                         className="flex justify-center cursor-pointer items-center"
                     >

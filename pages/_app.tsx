@@ -1,10 +1,11 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { store } from "../redux/store";
+import { store, persistor } from "../redux/store";
 import { Provider } from "react-redux";
 import ToastHelper from "@/helpers/toast.helper";
 import { NextRouter, Router } from "next/router";
 import { ConfigProvider } from "antd";
+import { PersistGate } from "redux-persist/integration/react";
 
 interface CustomAppProps extends Omit<AppProps, "Component"> {
     Component: AppProps["Component"];
@@ -13,17 +14,19 @@ interface CustomAppProps extends Omit<AppProps, "Component"> {
 const App = ({ Component, pageProps }: CustomAppProps) => {
     return (
         <Provider store={store}>
-            <ToastHelper>
-                <ConfigProvider
-                    theme={{
-                        token: {
-                            fontFamily: "Poppins",
-                        },
-                    }}
-                >
-                    <Component {...pageProps} />
-                </ConfigProvider>
-            </ToastHelper>
+            <PersistGate loading={null} persistor={persistor}>
+                <ToastHelper>
+                    <ConfigProvider
+                        theme={{
+                            token: {
+                                fontFamily: "Poppins",
+                            },
+                        }}
+                    >
+                        <Component {...pageProps} />
+                    </ConfigProvider>
+                </ToastHelper>
+            </PersistGate>
         </Provider>
     );
 };
