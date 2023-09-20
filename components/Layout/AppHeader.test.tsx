@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import AppHeader from "./AppHeader"; // Adjust the import path as needed
 import { logout } from "@/redux/actions/login.action";
@@ -51,8 +51,8 @@ describe("AppHeader Component", () => {
         await act(async () => {
             const logoutLink = screen.getByText("Logout");
             console.log(screen.getByText("Logout"));
-
             fireEvent.click(logoutLink);
+
             console.log(mockDispatch.mock.calls);
             const expected = {
                 type: "LOGOUT",
@@ -60,25 +60,13 @@ describe("AppHeader Component", () => {
             expect(logout()).toEqual(expected);
         });
     });
-    test("redirect to profile when the Profile is clicked", async () => {
-        const mockDispatch = jest.fn();
-        const useDispatchSpy = jest.spyOn(redux, "useDispatch");
-        useDispatchSpy.mockReturnValue(mockDispatch);
-
-        const store = mockStore({});
+    test("redirect to profile page when the Profile is clicked", async () => {
         const { getByTestId } = render(<AppHeader />);
         const profileDropdown = screen.getByTestId("profile-dropdown");
         fireEvent.click(profileDropdown);
         await act(async () => {
-            const logoutLink = screen.getByText("Logout");
-            console.log(screen.getByText("Logout"));
-
-            fireEvent.click(logoutLink);
-            console.log(mockDispatch.mock.calls);
-            const expected = {
-                type: "LOGOUT",
-            };
-            expect(logout()).toEqual(expected);
+            const profile = screen.getByRole("link", { name: "Profile" });
+            expect(profile).toHaveAttribute("href", "/dashboard");
         });
     });
 });
