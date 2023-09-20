@@ -22,7 +22,6 @@ const ForgotPassword: React.FC = () => {
 
     const handleSubmit = (values: { email: string }) => {
         console.log(values, "test@gmail.com");
-        // toast.success("Send Email Successfully");
         // call login request method from action file
         dispatch(forgotRequest(values.email));
     };

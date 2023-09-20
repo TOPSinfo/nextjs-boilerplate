@@ -9,7 +9,7 @@ export const apiCall = async (password: string, cnfPassword: string) => {
     const userData = { password: password, cnfPassword: cnfPassword };
     // add the api URL & parameters
     return await axios
-        .post("https://dummyjson.com/auth/reset", userData)
+        .post("/reset", userData)
         .then(response => response.data)
         .catch(err => {
             throw err;

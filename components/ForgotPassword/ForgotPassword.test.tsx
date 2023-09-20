@@ -1,19 +1,8 @@
 import ForgotPassword, { validateEmail } from "./index";
-import {
-    act,
-    fireEvent,
-    queryByText,
-    render,
-    screen,
-    waitFor,
-} from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import "../../mockMatchMedia";
-import { apiCall } from "@/redux/sagas/forgot.saga";
-import { useDispatch } from "react-redux";
-import { forgotRequest } from "@/redux/actions/forgot.action";
-const mockDispatch = jest.fn();
 
 jest.mock("react-redux", () => ({
     useDispatch: jest.fn(),
@@ -87,39 +76,4 @@ describe("Test the ForgotPassword Component", () => {
     });
 
     // Add test cases for api call when user submit form
-    // describe("dispatch Submit button", () => {
-    //     test("dispatches FORGOT_REQUEST action on form submission", async () => {
-    //         const { getByTestId } = render(<ForgotPassword />);
-    //         const dispatch = jest.fn();
-    //         (useDispatch as jest.Mock).mockReturnValue(dispatch);
-
-    //         // Mock the API function to resolve with success
-    //         (apiCall as jest.Mock).mockResolvedValue({ success: true });
-    //         // Simulate form submission
-    //         await waitFor(async () => {
-    //             userEvent.click(screen.getByRole("button"));
-    //         });
-    //         // Wait for the API call to resolve
-    //         const email = screen.getByPlaceholderText("Enter email");
-
-    //         userEvent.type(email, "test@example.com");
-
-    //         // Check if the SIGNUP_REQUEST action was dispatched
-    //         await act(async () => {
-    //             // Call the forgotRequest action creator with the sample user data
-    //             mockDispatch(forgotRequest("test@example.com"));
-    //         });
-    //         await act(async () => {
-    //             expect(mockDispatch).toHaveBeenCalledWith(
-    //                 forgotRequest("test@example.com")
-    //             );
-    //         });
-    //         // this should be called when the api is integrated then uncomment the following line
-    //         // await act(async () => screen.getByText("Sent Email Successfully to reset your password"));
-
-    //         // Add assertions for handling the API response in your saga
-    //         // For example:
-    //         // expect(dispatch).toHaveBeenCalledWith(forgotSuccess(/* response data */));
-    //     });
-    // });
 });

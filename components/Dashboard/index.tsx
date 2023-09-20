@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Col, Layout, Row, Typography } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Loader from "../Loader";
 import { Line } from "react-chartjs-2";
@@ -28,7 +28,6 @@ interface PieChartProps {
     }[];
 }
 const Dashboard: React.FC = () => {
-    const dispatch = useDispatch();
     const resetData = useSelector((state: RootState) => state.resetReducer);
     const chartData: PieChartProps = {
         labels: ["January", "February", "March", "April", "May"],
@@ -111,9 +110,7 @@ const Dashboard: React.FC = () => {
                                     <Typography.Title level={4}>
                                         Unique Visitors
                                     </Typography.Title>
-                                    <div
-                                    // style={{ width: "300px", height: "300px" }}
-                                    >
+                                    <div>
                                         <Line
                                             options={{
                                                 maintainAspectRatio: false,
@@ -131,9 +128,7 @@ const Dashboard: React.FC = () => {
                                     <Typography.Title level={4}>
                                         Unique Visitors
                                     </Typography.Title>
-                                    <div
-                                    // style={{ width: "300px", height: "300px" }}
-                                    >
+                                    <div>
                                         <Line
                                             options={{
                                                 maintainAspectRatio: false,

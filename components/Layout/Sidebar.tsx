@@ -6,7 +6,6 @@ import {
     UserOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 // components/Layout.tsx

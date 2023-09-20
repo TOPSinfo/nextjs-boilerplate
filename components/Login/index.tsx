@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Button, Card, Col, Form, Input, Row, Typography } from "antd";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { loginRequest } from "@/redux/actions/login.action";
 import { RootState } from "../../redux/store";
@@ -26,20 +25,16 @@ const Login: React.FC = () => {
     useEffect(() => {
         console.log("isLoggedIn", loginData?.isLoggedIn, loginData?.error);
         if (loginData?.isLoggedIn) {
-            // redirect to dashboard page after login when we integrate API
+            // redirect to dashboard page after login when we integrate A
             router.push("/dashboard");
         }
     }, [loginData, router]);
 
     const handleSubmit = (values: { email: string; password: string }) => {
         console.log(values, "test@gmail.com");
-        // after integrating the API remove this code from here & move to saga
-        toast.success("Login Successfully");
-        router.push("/dashboard");
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("user", JSON.stringify(values));
+        
         // call login request method from action file
-        // dispatch(loginRequest(values.email, values.password));
+        dispatch(loginRequest(values.email, values.password));
     };
     return (
         <div className=" h-screen bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto">

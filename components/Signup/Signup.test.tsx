@@ -7,10 +7,6 @@ import mockRouter from "next-router-mock";
 import "@testing-library/jest-dom";
 import { validateEmail } from "../Login";
 import { act } from "@testing-library/react";
-// import { apiCall } from "@/redux/sagas/signup.saga";
-// import { useDispatch } from "react-redux";
-// import { signupRequest } from "@/redux/actions/signup.action";
-// const mockDispatch = jest.fn();
 
 jest.mock("next/router", () => jest.requireActual("next-router-mock"));
 jest.mock("react-redux", () => ({
@@ -156,58 +152,3 @@ describe("Signup Component", () => {
     });
     // Add more test cases for validation, error handling, etc.
 });
-
-// Add test cases for submitting the form
-// describe("dispatch Submit button", () => {
-//     test("dispatches SIGNUP_REQUEST action on form submission", async () => {
-//         const { getByTestId } = render(<Signup />);
-//         const dispatch = jest.fn();
-//         (useDispatch as jest.Mock).mockReturnValue(dispatch);
-
-//         // Mock the API function to resolve with success
-//         (apiCall as jest.Mock).mockResolvedValue({ success: true });
-//         // Simulate form submission
-//         await act(async () => {
-//             userEvent.click(screen.getByRole("button"));
-//         });
-//         // Wait for the API call to resolve
-//         const email = screen.getByPlaceholderText("Enter Email");
-//         const password = screen.getByPlaceholderText("Password");
-//         const username = screen.getByPlaceholderText("Enter Username");
-//         const confirmPassword = screen.getByPlaceholderText("Confirm Password");
-//         const gender = screen.getByText("Gender");
-//         const phnNumber = screen.getByPlaceholderText("Enter Phone Number");
-
-//         userEvent.type(email, "test@example.com");
-//         userEvent.type(password, "password123");
-//         userEvent.type(username, "testuser");
-//         userEvent.type(confirmPassword, "password123");
-//         userEvent.type(gender, "male");
-//         userEvent.type(phnNumber, "1234567890");
-//         const sampleUser = {
-//             email: "test@example.com",
-//             password: "password123",
-//             username: "testuser",
-//             phone: "1234567890",
-//             gender: "male",
-//             cnfPassword: "password123",
-//             agreement: true,
-//         };
-//         // Check if the SIGNUP_REQUEST action was dispatched
-//         await act(async () => {
-//             // Call the signupRequest action creator with the sample user data
-//             mockDispatch(signupRequest(sampleUser));
-//         });
-//         await act(async () => {
-//             expect(mockDispatch).toHaveBeenCalledWith(
-//                 signupRequest(sampleUser)
-//             );
-//         });
-//         // this should be called when the api is integrated then uncomment the following line
-//         // await act(async () => screen.getByText("Registration Successfully"));
-
-//         // Add assertions for handling the API response in your saga
-//         // For example:
-//         // expect(dispatch).toHaveBeenCalledWith(signupSuccess(/* response data */));
-//     });
-// });

@@ -12,7 +12,6 @@ import {
     Typography,
 } from "antd";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useRouter } from "next/router";

@@ -15,7 +15,6 @@ jest.mock("react-toastify", () => ({
         success: jest.fn(),
     },
 }));
-const onSubmit = jest.fn();
 
 describe("Test the Login Component", () => {
     test("render the reset form on the screen", async () => {

@@ -13,7 +13,7 @@ export const apiCall = async (email: string) => {
     const userData = { email: email };
     // add the api URL & parameters
     return await axios
-        .post("https://dummyjson.com/auth/forgot", userData)
+        .post("/forgot", userData)
         .then(response => response.data)
         .catch(err => {
             throw err;

@@ -3,7 +3,6 @@ import type { AppProps } from "next/app";
 import { store, persistor } from "../redux/store";
 import { Provider } from "react-redux";
 import ToastHelper from "@/helpers/toast.helper";
-import { NextRouter, Router } from "next/router";
 import { ConfigProvider } from "antd";
 import { PersistGate } from "redux-persist/integration/react";
 

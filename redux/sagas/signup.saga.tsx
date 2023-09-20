@@ -22,7 +22,7 @@ export const apiCall = async (user: User) => {
     const userData = user;
     // add the api URL & parameters
     return await axios
-        .post("https://dummyjson.com/auth/signup", userData)
+        .post("/signup", userData)
         .then(response => response.data)
         .catch(err => {
             throw err;

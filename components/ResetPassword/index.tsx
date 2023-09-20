@@ -18,7 +18,6 @@ const ResetPassword: React.FC = () => {
         cnfPassword: string;
     }) => {
         console.log(values, "handleSubmit");
-        // toast.success("Password update successfully");
         // call login request method from action file
         dispatch(resetRequest(values.password, values.cnfPassword));
     };
