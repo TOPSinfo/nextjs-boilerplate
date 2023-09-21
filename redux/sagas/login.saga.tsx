@@ -1,10 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import axios from "axios";
 import {
+    hideLoader,
     loginFail,
     loginRequest,
     loginSuccess,
     logout,
+    showLoader,
 } from "../actions/login.action";
 import { LOGIN_REQUEST, LOGOUT } from "../constant";
 import { toast } from "react-toastify";
@@ -13,6 +15,7 @@ import { toast } from "react-toastify";
 export function* loginRequestSaga(
     action: ReturnType<typeof loginRequest>
 ): any {
+    yield put(showLoader());
     const apiCall = async () => {
         const userData = {
             email: action.payload.email,
@@ -40,6 +43,8 @@ export function* loginRequestSaga(
     } catch (err: any) {
         toast.error(err?.message);
         yield put(loginFail(err?.message));
+    } finally {
+        yield put(hideLoader());
     }
 }
 

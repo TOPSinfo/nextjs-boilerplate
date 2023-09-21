@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import ToastHelper from "@/helpers/toast.helper";
 import { ConfigProvider } from "antd";
 import { PersistGate } from "redux-persist/integration/react";
+import Loader from "@/components/Loader";
 
 interface CustomAppProps extends Omit<AppProps, "Component"> {
     Component: AppProps["Component"];

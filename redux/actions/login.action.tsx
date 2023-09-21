@@ -1,4 +1,11 @@
-import { LOGIN_FAIL, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT } from "../constant";
+import {
+    HIDE_LOADER,
+    LOGIN_FAIL,
+    LOGIN_REQUEST,
+    LOGIN_SUCCESS,
+    LOGOUT,
+    SHOW_LOADER,
+} from "../constant";
 
 interface LoginRequestAction {
     type: typeof LOGIN_REQUEST;
@@ -17,10 +24,16 @@ interface LoginFailAction {
 interface Logout {
     type: typeof LOGOUT;
 }
+interface showLoader {
+    type: typeof SHOW_LOADER;
+}
+interface hideLoader {
+    type: typeof HIDE_LOADER;
+}
 export type AuthActionTypes =
     | LoginRequestAction
     | LoginSuccessAction
-    | LoginFailAction;
+    | LoginFailAction | showLoader | hideLoader;
 
 export const loginRequest = (
     email: string,
@@ -49,4 +62,12 @@ export const loginFail = (error: string): LoginFailAction => ({
 
 export const logout = (): Logout => ({
     type: LOGOUT,
+});
+
+export const showLoader = (): showLoader => ({
+    type: SHOW_LOADER,
+});
+
+export const hideLoader = (): hideLoader => ({
+    type: HIDE_LOADER,
 });

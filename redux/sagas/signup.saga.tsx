@@ -7,6 +7,7 @@ import {
 } from "../actions/signup.action";
 import { SIGNUP_REQUEST } from "../constant";
 import { toast } from "react-toastify";
+import { hideLoader, showLoader } from "../actions/login.action";
 
 type User = {
     email: string;
@@ -33,6 +34,7 @@ export const apiCall = async (user: User) => {
 export function* signupRequestSaga(
     action: ReturnType<typeof signupRequest>
 ): any {
+    yield put(showLoader());
     try {
         const response = yield call(apiCall, action.payload.user);
         const data = yield response.json();
@@ -47,6 +49,8 @@ export function* signupRequestSaga(
         console.log("Error");
         toast.error(err.message);
         yield put(signupFail(err.message));
+    } finally {
+        yield put(hideLoader());
     }
 }
 

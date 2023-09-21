@@ -3,6 +3,7 @@ import axios from "axios";
 import { RESET_PASSWORD_REQUEST } from "../constant";
 import { toast } from "react-toastify";
 import { resetFail, resetRequest, resetSuccess } from "../actions/reset.action";
+import { hideLoader, showLoader } from "../actions/login.action";
 
 // call axios method for forgot api call
 export const apiCall = async (password: string, cnfPassword: string) => {
@@ -20,6 +21,7 @@ export function* resetRequestSaga(
     action: ReturnType<typeof resetRequest>
 ): any {
     try {
+        yield put(showLoader());
         const response = yield call(
             apiCall,
             action.payload.password,
@@ -38,6 +40,8 @@ export function* resetRequestSaga(
         console.log("Error");
         toast.error(err.message);
         yield put(resetFail(err.message));
+    } finally {
+        yield put(hideLoader());
     }
 }
 

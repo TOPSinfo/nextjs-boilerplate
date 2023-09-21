@@ -19,7 +19,7 @@ const Sidebar: React.FC = () => {
     return (
         <div>
             <Layout.Sider
-                className="sidebar"
+                className="sidebar fixed"
                 data-testid="sidebar"
                 breakpoint={"lg"}
                 theme="light"

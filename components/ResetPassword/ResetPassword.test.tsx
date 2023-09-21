@@ -61,7 +61,7 @@ describe("Test the Reset Password Component", () => {
         });
         // Wait for success message or any other confirmation element
         await act(async () => {
-            userEvent.type(screen.getByText("Submit"), "Enter");
+            userEvent.type(screen.getByText("Submit"),"Enter");
             expect(queryByText("Password is required")).not.toBeInTheDocument();
             expect(
                 queryByText("Confirm Password is required")

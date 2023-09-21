@@ -1,8 +1,5 @@
 import React from "react";
 import { Card, Col, Layout, Row, Typography } from "antd";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import Loader from "../Loader";
 import { Line } from "react-chartjs-2";
 import {
     Chart,
@@ -28,7 +25,6 @@ interface PieChartProps {
     }[];
 }
 const Dashboard: React.FC = () => {
-    const resetData = useSelector((state: RootState) => state.resetReducer);
     const chartData: PieChartProps = {
         labels: ["January", "February", "March", "April", "May"],
         datasets: [
@@ -41,106 +37,110 @@ const Dashboard: React.FC = () => {
         ],
     };
     return (
-        <Layout.Content className="bg-[#F0F2F5] overflow-hidden">
+        <Layout.Content className="bg-[#F0F2F5] w-[calc(100vw- 200px)] pl-[200px] overflow-hidden overflow-hidden">
             <div className="bg-[#F0F2F5]">
-                {resetData?.loading ? (
-                    <Loader />
-                ) : (
-                    <>
-                        <Row>
-                            <Col
-                                className="px-[8px] py-[8px]"
-                                xs={24}
-                                md={8}
-                                lg={8}
-                            >
-                                <Card bordered>
-                                    <Typography.Title level={5}>
-                                        Revenue
-                                    </Typography.Title>
-                                    <Typography.Title
-                                        className="!mt-[10px] !text-[#3e79f7]"
-                                        level={3}
-                                    >
-                                        $260.25
-                                    </Typography.Title>
-                                </Card>
-                            </Col>
-                            <Col
-                                className="px-[8px] py-[8px]"
-                                xs={24}
-                                md={8}
-                                lg={8}
-                            >
-                                <Card bordered>
-                                    <Typography.Title level={5}>
-                                        Sales
-                                    </Typography.Title>
-                                    <Typography.Title
-                                        className="!mt-[10px] !text-[#3e79f7]"
-                                        level={3}
-                                    >
-                                        $230
-                                    </Typography.Title>
-                                </Card>
-                            </Col>
-                            <Col
-                                className="px-[8px] py-[8px]"
-                                xs={24}
-                                md={8}
-                                lg={8}
-                            >
-                                <Card bordered={true}>
-                                    <Typography.Title level={5}>
-                                        Costs
-                                    </Typography.Title>
-                                    <Typography.Title
-                                        className="!mt-[10px] !text-[#3e79f7]"
-                                        level={3}
-                                    >
-                                        $230
-                                    </Typography.Title>
-                                </Card>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className="px-[8px] py-[8px]" xs={24}>
-                                {" "}
-                                <Card bordered={true}>
-                                    <Typography.Title level={4}>
-                                        Unique Visitors
-                                    </Typography.Title>
-                                    <div>
-                                        <Line
-                                            options={{
-                                                maintainAspectRatio: false,
-                                            }}
-                                            data={chartData}
-                                        />
-                                    </div>
-                                </Card>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className="px-[8px] py-[8px]" xs={24}>
-                                {" "}
-                                <Card bordered={true}>
-                                    <Typography.Title level={4}>
-                                        Unique Visitors
-                                    </Typography.Title>
-                                    <div>
-                                        <Line
-                                            options={{
-                                                maintainAspectRatio: false,
-                                            }}
-                                            data={chartData}
-                                        />
-                                    </div>
-                                </Card>
-                            </Col>
-                        </Row>
-                    </>
-                )}
+                <>
+                    <Row>
+                        <Col className="px-[15px] py-[15px]" xs={24}>
+                            {" "}
+                            <Typography.Title level={3}>
+                                Dashboard
+                            </Typography.Title>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col
+                            className="px-[15px] py-[15px]"
+                            xs={24}
+                            md={8}
+                            lg={8}
+                        >
+                            <Card bordered>
+                                <Typography.Title level={5}>
+                                    Revenue
+                                </Typography.Title>
+                                <Typography.Title
+                                    className="!mt-[10px] !text-[#3e79f7]"
+                                    level={3}
+                                >
+                                    $260.25
+                                </Typography.Title>
+                            </Card>
+                        </Col>
+                        <Col
+                            className="px-[15px] py-[15px]"
+                            xs={24}
+                            md={8}
+                            lg={8}
+                        >
+                            <Card bordered>
+                                <Typography.Title level={5}>
+                                    Sales
+                                </Typography.Title>
+                                <Typography.Title
+                                    className="!mt-[10px] !text-[#3e79f7]"
+                                    level={3}
+                                >
+                                    $230
+                                </Typography.Title>
+                            </Card>
+                        </Col>
+                        <Col
+                            className="px-[15px] py-[15px]"
+                            xs={24}
+                            md={8}
+                            lg={8}
+                        >
+                            <Card bordered={true}>
+                                <Typography.Title level={5}>
+                                    Costs
+                                </Typography.Title>
+                                <Typography.Title
+                                    className="!mt-[10px] !text-[#3e79f7]"
+                                    level={3}
+                                >
+                                    $230
+                                </Typography.Title>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="px-[15px] py-[15px]" xs={24}>
+                            {" "}
+                            <Card bordered={true}>
+                                <Typography.Title level={4}>
+                                    Unique Visitors
+                                </Typography.Title>
+                                <div>
+                                    <Line
+                                        options={{
+                                            maintainAspectRatio: false,
+                                        }}
+                                        data={chartData}
+                                    />
+                                </div>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="px-[15px] py-[15px]" xs={24}>
+                            {" "}
+                            <Card bordered={true}>
+                                <Typography.Title level={4}>
+                                    Unique Sales
+                                </Typography.Title>
+                                <div>
+                                    <Line
+                                        options={{
+                                            maintainAspectRatio: false,
+                                        }}
+                                        data={chartData}
+                                    />
+                                </div>
+                            </Card>
+                        </Col>
+                    </Row>
+                </>
             </div>
         </Layout.Content>
     );

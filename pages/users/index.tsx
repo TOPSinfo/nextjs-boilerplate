@@ -1,11 +1,12 @@
 import Layout from "@/components/Layout";
 import React from "react";
 import withAuth from "@/helpers/withAuth";
+import Users from "@/components/Users";
 
 const UsersPage: React.FC = () => {
     return (
-        <Layout title="Dashboard">
-            <h1>Hello World</h1>
+        <Layout title="Users List">
+            <Users  />
         </Layout>
     );
 };

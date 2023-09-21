@@ -7,6 +7,7 @@ import {
     forgotRequest,
     forgotSuccess,
 } from "../actions/forgot.action";
+import { hideLoader, showLoader } from "../actions/login.action";
 
 // call axios method for forgot api call
 export const apiCall = async (email: string) => {
@@ -23,6 +24,7 @@ export const apiCall = async (email: string) => {
 export function* forgotRequestSaga(
     action: ReturnType<typeof forgotRequest>
 ): any {
+    yield put(showLoader());
     try {
         const response = yield call(apiCall, action.payload.email);
         const data = yield response.json();
@@ -39,6 +41,8 @@ export function* forgotRequestSaga(
         console.log("Error");
         toast.error(err.message);
         yield put(forgotFail(err.message));
+    } finally {
+        yield put(hideLoader());
     }
 }
 

@@ -6,13 +6,11 @@ import {
 import { AuthActionTypes } from "../actions/reset.action";
 // change in type a/c to apiAction
 export interface AuthState {
-    loading: boolean;
     error: string | null;
     success: boolean;
 }
 
 const initialState: AuthState = {
-    loading: false,
     error: null,
     success: false,
 };
@@ -24,13 +22,11 @@ const resetPassword = (state = initialState, action: AuthActionTypes) => {
             return {
                 ...state,
                 error: null,
-                loading: true,
                 success: false,
             };
         case RESET_PASSWORD_SUCCESS:
             return {
                 ...state,
-                loading: false,
                 success: true,
                 error: null,
             };
@@ -38,7 +34,6 @@ const resetPassword = (state = initialState, action: AuthActionTypes) => {
             return {
                 ...state,
                 success: false,
-                loading: false,
                 error: action.payload.error,
             };
         default:

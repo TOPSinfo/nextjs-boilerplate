@@ -4,6 +4,9 @@ import Head from "next/head";
 import AppHeader from "./AppHeader";
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import Loader from "../Loader";
 
 interface LayoutProps {
     title: string;
@@ -12,6 +15,9 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     const [isAuth, setIsAuth] = useState<string | null>("");
+    const isLoading = useSelector(
+        (state: RootState) => state.loaderReducer.loading
+    );
 
     useEffect(() => {
         const value: string | null = localStorage.getItem("isLoggedIn");
@@ -33,6 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
                 ) : (
                     ""
                 )}
+                {isLoading && <Loader />}
                 {isAuth === "true" ? (
                     <div className="flex">
                         <Sidebar />
