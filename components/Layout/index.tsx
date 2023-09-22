@@ -1,27 +1,27 @@
 // components/Layout.tsx
-import { Affix } from "antd";
+import { Affix, Skeleton } from "antd";
 import Head from "next/head";
-import AppHeader from "./AppHeader";
 import { useEffect, useState } from "react";
-import Sidebar from "./Sidebar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import Loader from "../Loader";
+import AppHeader from "./AppHeader";
+import Sidebar from "./Sidebar";
 
 interface LayoutProps {
     title: string;
-    children: JSX.Element;
+    children: React.ReactNode; // Use React.ReactNode for children
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
-    const [isAuth, setIsAuth] = useState<string | null>("");
+    const [isAuth, setIsAuth] = useState<boolean | null>(null); // Use boolean for isAuth
     const isLoading = useSelector(
         (state: RootState) => state.loaderReducer.loading
     );
 
     useEffect(() => {
-        const value: string | null = localStorage.getItem("isLoggedIn");
-        setIsAuth(value);
+        const value = localStorage.getItem("isLoggedIn");
+        console.log("value", value);
+        setIsAuth(value === "true"); // Use boolean value
     }, []);
 
     return (
@@ -31,26 +31,34 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
                 {/* Add other meta tags here */}
             </Head>
             <main>
-                {" "}
-                {isAuth === "true" ? (
+                {!isAuth && ( // Use boolean for conditional rendering when not logged in
                     <Affix offsetTop={0} className="app__affix-header">
-                        <AppHeader />
+                        <SkeletonHeader />
                     </Affix>
-                ) : (
-                    ""
                 )}
-                {isLoading && <Loader />}
-                {isAuth === "true" ? (
-                    <div className="flex">
-                        <Sidebar />
-                        {children}
+                {isAuth && ( // Use boolean for conditional rendering
+                    <div>
+                        <Affix offsetTop={0} className="app__affix-header">
+                            <AppHeader />
+                        </Affix>
+                        <div>
+                            {" "}
+                            <Sidebar />
+                            {children}{" "}
+                        </div>
                     </div>
-                ) : (
-                    <>{children}</>
+                )}
+                {isAuth === null && ( // Use boolean for conditional rendering when not logged in
+                    <div>{children}</div>
                 )}
             </main>
         </>
     );
+};
+
+const SkeletonHeader: React.FC = () => {
+    // Implement a skeleton loader for the header here
+    return <Skeleton.Input className="h-[62px]" block={true}  active size="large" />;
 };
 
 export default Layout;

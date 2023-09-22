@@ -44,7 +44,7 @@ const AppHeader = () => {
                     {" "}
                     <Image
                         width={150}
-                        height={70}
+                        height={66}
                         src={"/images/logo-header.png"}
                         alt="logo-header"
                         priority

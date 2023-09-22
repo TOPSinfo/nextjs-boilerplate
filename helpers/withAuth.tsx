@@ -8,14 +8,17 @@ const withAuth = <P extends object>(
 ) => {
     const ComponentWithAuth = (props: P) => {
         const router = useRouter();
-        const isLoggedIn = useSelector(
-            (state: RootState) => state.loginReducer.isLoggedIn
-        );
+        // uncomment the following line after integrating API
+        // const isLoggedIn = useSelector(
+        //     (state: RootState) => state.loginReducer.isLoggedIn
+        // );
+        // comment out the following line after integrating API
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
 
         useEffect(() => {
             // Perform authentication check here
 
-            if (!isLoggedIn) {
+            if (isLoggedIn === "false") {
                 // redirect to login page
                 router.push("/");
             }

@@ -14,17 +14,22 @@ type User = {
 
 type UserState = {
     users: User[] | [];
-
+    total: number;
+    limit: number;
+    skip: number;
     error: string | null;
 };
 // Define the initial state
 const initialState: UserState = {
     users: [],
+    total: 0,
+    limit: 0,
+    skip: 0,
     error: null,
 };
 
 // Reducer function
-const userReducer = (
+export const userReducer = (
     state = initialState,
     action: UserActionTypes
 ): UserState => {
@@ -40,6 +45,9 @@ const userReducer = (
                 ...state,
                 users: action.payload.users,
                 error: null,
+                total: action.payload.total,
+                limit: action.payload.limit,
+                skip: action.payload.skip,
             };
 
         case USERS_LIST_FAIL:
@@ -54,4 +62,35 @@ const userReducer = (
     }
 };
 
-export default userReducer;
+export const createUserReducer = (
+    state = initialState,
+    action: UserActionTypes
+): UserState => {
+    switch (action.type) {
+        case USERS_LIST_REQUEST:
+            return {
+                ...state,
+                error: null,
+            };
+
+        case USERS_LIST_SUCCESS:
+            return {
+                ...state,
+                users: action.payload.users,
+                error: null,
+                total: action.payload.total,
+                limit: action.payload.limit,
+                skip: action.payload.skip,
+            };
+
+        case USERS_LIST_FAIL:
+            return {
+                ...state,
+                users: [],
+                error: action.error,
+            };
+
+        default:
+            return state;
+    }
+};

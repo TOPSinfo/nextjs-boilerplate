@@ -5,6 +5,7 @@ import {
     Col,
     Dropdown,
     Layout,
+    Pagination,
     Result,
     Row,
     Space,
@@ -25,51 +26,79 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { fetchUsersRequest } from "@/redux/actions/user.action";
-interface DataType {
-    key: string;
-    firstName: string;
-    age: number;
-    phone: string;
-    email: string;
-}
-type User = {};
+import UserModal from "./UserModal";
 
-const items: MenuProps["items"] = [
-    {
-        label: (
-            <>
-                <EyeOutlined className="pr-[10px]" /> View
-            </>
-        ),
-        key: "view",
-    },
-    {
-        type: "divider",
-    },
-    {
-        label: (
-            <>
-                <EditFilled className="pr-[10px]" /> Edit
-            </>
-        ),
-        key: "edit",
-    },
-    {
-        type: "divider",
-    },
-    {
-        label: (
-            <>
-                <DeleteOutlined className="pr-[10px]" /> Delete
-            </>
-        ),
-        key: "delete",
-    },
-];
+type User = {};
+type UserModalState = {
+    id: string;
+    firstName: string;
+    email: string;
+    phone: string;
+    age: number;
+};
+
 const Users: React.FC = () => {
-    const userData = useSelector((state: RootState) => state.userReducer);
-    const [users, setUsers] = useState<User[] | []>([]);
     const dispatch = useDispatch();
+    const userData = useSelector((state: RootState) => state.userReducer);
+    const isLoading = useSelector(
+        (state: RootState) => state.loaderReducer.loading
+    );
+    const [users, setUsers] = useState<User[] | []>([]);
+    const [open, setOpen] = useState<boolean>(false);
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+
+    const [editUser, setEditUser] = useState<UserModalState | {}>({});
+    const handleEdit = () => {
+        setIsEdit(true);
+        setOpen(!open);
+    };
+    const handleCreate = () => {
+        setOpen(!open);
+        setIsEdit(false);
+        setEditUser({});
+    };
+
+    useEffect(() => {
+        if (userData) {
+            setUsers(userData?.users);
+        }
+    }, [userData]);
+
+    useEffect(() => {
+        dispatch(fetchUsersRequest());
+    }, [dispatch]);
+    const items: MenuProps["items"] = [
+        {
+            label: (
+                <>
+                    <EyeOutlined className="pr-[10px]" /> View
+                </>
+            ),
+            key: "view",
+        },
+        {
+            type: "divider",
+        },
+        {
+            label: (
+                <div onClick={handleEdit}>
+                    <EditFilled className="pr-[10px]" /> Edit
+                </div>
+            ),
+            key: "edit",
+        },
+        {
+            type: "divider",
+        },
+        {
+            label: (
+                <>
+                    <DeleteOutlined className="pr-[10px]" /> Delete
+                </>
+            ),
+            key: "delete",
+        },
+    ];
     const columns: ColumnsType<User> = [
         {
             title: "Name",
@@ -102,27 +131,20 @@ const Users: React.FC = () => {
                     trigger={["click"]}
                 >
                     <Space size="middle">
-                        <MoreOutlined className="text-[24px] cursor-pointer" />
+                        <MoreOutlined
+                            onClick={() => setEditUser(record)}
+                            className="text-[24px] cursor-pointer"
+                        />
                     </Space>
                 </Dropdown>
             ),
         },
     ];
 
-    useEffect(() => {
-        if (userData && userData?.users) {
-            console.log("data ======>: ", userData?.users);
-            setUsers(userData?.users);
-        }
-    }, [userData]);
-
-    useEffect(() => {
-        dispatch(fetchUsersRequest());
-    }, [dispatch]);
     return (
         <Layout.Content
             data-testid="users-component"
-            className="bg-[#F0F2F5] w-[calc(100vw- 200px)] pl-[200px] overflow-hidden"
+            className="bg-[#F0F2F5] pl-[200px] overflow-hidden"
         >
             <div className="bg-[#F0F2F5]">
                 <>
@@ -138,24 +160,51 @@ const Users: React.FC = () => {
                                 className="bg-[#3e79f7] hover:text-[#3e79f7] hover:bg-[#fff] text-[#fff] "
                                 size="large"
                                 icon={<PlusOutlined />}
+                                onClick={handleCreate}
                             >
                                 {" "}
                                 Create Users
                             </Button>
                         </Col>
                     </Row>
+                    {isLoading && <Loader />}
                     <Row>
                         <Col className="px-[15px] py-[15px]" span={24}>
                             {users.length > 0 && (
-                                <Table columns={columns} dataSource={users} />
+                                <>
+                                    <Table
+                                        columns={columns}
+                                        pagination={false}
+                                        dataSource={users}
+                                    />
+                                </>
                             )}{" "}
+                            {userData && (
+                                <Pagination
+                                    className="text-right mt-[20px]"
+                                    pageSize={userData?.limit}
+                                    total={userData?.total}
+                                    showSizeChanger={false}
+                                    // add onchange for the get all data a/c to pagination
+                                />
+                            )}
                             {users.length === 0 && (
                                 <div className="text-center">
-                                    <Result status="404" title="No Users Found" />
+                                    <Result
+                                        status="404"
+                                        title="No Users Found"
+                                    />
                                 </div>
                             )}
                         </Col>
                     </Row>
+                    <UserModal
+                        open={open}
+                        setOpen={setOpen}
+                        userToEdit={editUser}
+                        isEdit={isEdit}
+                        setIsEdit={setIsEdit}
+                    />
                 </>
             </div>
         </Layout.Content>

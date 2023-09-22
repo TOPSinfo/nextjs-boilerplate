@@ -16,7 +16,7 @@ const Loader: React.FC = () => {
     return isLoading.loading ? (
         <div
             data-testid="loader"
-            className="loader-container h-screen flex justify-center items-center text-center rounded-[4px] bg-[rgba(0, 0, 0, 0.05)]"
+            className="loader-container h-screen flex justify-center items-center text-center rounded-[4px] bg-[rgba(0, 0, 0, 0.5)]"
         >
             <Spin indicator={antIcon} size="large" />
         </div>

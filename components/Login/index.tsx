@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginRequest } from "@/redux/actions/login.action";
 import { RootState } from "../../redux/store";
 import { useRouter } from "next/router";
+import Loader from "../Loader";
 type User = {
     email: string;
     password: string;
@@ -31,8 +32,12 @@ const Login: React.FC = () => {
 
     const handleSubmit = (values: { email: string; password: string }) => {
         console.log(values, "test@gmail.com");
-                // call login request method from action file
-        dispatch(loginRequest(values.email, values.password));
+        // after integrating the API remove this code from here & move to saga
+        router.push("/dashboard");
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("user", JSON.stringify(values));
+        // call login request method from action file
+        // dispatch(loginRequest(values.email, values.password));
     };
     return (
         <div className=" h-screen bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto">
