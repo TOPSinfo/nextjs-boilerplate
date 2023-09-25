@@ -1,15 +1,17 @@
 import Login from "../components/Login";
 import React from "react";
-import Layout from "@/components/Layout";
+import Head from "next/head";
 
 const Home: React.FC = () => {
-    {/* add the title a/c to your project name */}
     return (
-        <Layout title="Login Page">
-            <div>
-                <Login />
-            </div>
-        </Layout>
+        <div>
+            <Head>
+                <title>Login</title>
+                {/* Add other meta tags here */}
+            </Head>
+
+            <Login />
+        </div>
     );
 };
 

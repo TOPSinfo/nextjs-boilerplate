@@ -1,12 +1,17 @@
 import ForgotPassword from "@/components/ForgotPassword/index";
-import Layout from "@/components/Layout";
+import Head from "next/head";
 import React from "react";
 
 const ForgotPasswordPage: React.FC = () => {
     return (
-        <Layout title="Forgot Password Page">
+        <div>
+            <Head>
+                <title>Forgot Password</title>
+                {/* Add other meta tags here */}
+            </Head>
+
             <ForgotPassword />
-        </Layout>
+        </div>
     );
 };
 

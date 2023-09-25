@@ -2,8 +2,6 @@
 import { Affix, Skeleton } from "antd";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import AppHeader from "./AppHeader";
 import Sidebar from "./Sidebar";
 
@@ -14,16 +12,11 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     const [isAuth, setIsAuth] = useState<boolean | null>(null); // Use boolean for isAuth
-    const isLoading = useSelector(
-        (state: RootState) => state.loaderReducer.loading
-    );
 
     useEffect(() => {
         const value = localStorage.getItem("isLoggedIn");
-        console.log("value", value);
-        setIsAuth(value === "true"); // Use boolean value
+        setIsAuth(value === "true" ? true : value === null ? null : false); // Use boolean value
     }, []);
-
     return (
         <>
             <Head>
@@ -48,9 +41,6 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
                         </div>
                     </div>
                 )}
-                {isAuth === null && ( // Use boolean for conditional rendering when not logged in
-                    <div>{children}</div>
-                )}
             </main>
         </>
     );
@@ -58,7 +48,9 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
 
 const SkeletonHeader: React.FC = () => {
     // Implement a skeleton loader for the header here
-    return <Skeleton.Input className="h-[62px]" block={true}  active size="large" />;
+    return (
+        <Skeleton.Input className="h-[62px]" block={true} active size="large" />
+    );
 };
 
 export default Layout;

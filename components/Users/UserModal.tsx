@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { Modal, Form, Input, Button } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    createUserRequest,
+    updateUserRequest,
+} from "@/redux/actions/user.action";
+import { RootState } from "@/redux/store";
 
 interface User {
     id: string;
     firstName: string;
     email: string;
     phone: string;
-    age: number;
+    age: number | null;
 }
 
 interface UserModalProps {
@@ -16,6 +22,8 @@ interface UserModalProps {
     isEdit: boolean;
     onSave?: (user: User) => void;
     userToEdit?: User | {};
+    setEditUser: ({}) => void;
+    id: string;
 }
 
 const UserModal: React.FC<UserModalProps> = ({
@@ -25,24 +33,37 @@ const UserModal: React.FC<UserModalProps> = ({
     userToEdit,
     isEdit,
     setIsEdit,
+    setEditUser,
+    id,
 }) => {
     const [form] = Form.useForm();
-
+    const dispatch = useDispatch();
+    const isLoading = useSelector(
+        (state: RootState) => state.loaderReducer.loading
+    );
     const [initialValue, setInitialValue] = useState<User | {}>({
-        id: "",
         firstName: "",
         email: "",
         phone: "",
+        age: null,
+        id: "",
     });
     const handleCancel = () => {
         setOpen(!open);
         form.resetFields();
         setIsEdit(false);
+        setInitialValue({ firstName: "", email: "", phone: "", age: null });
     };
     const handleSave = async () => {
         try {
             const values = await form.validateFields();
-            // onSave(values);
+            values.id = id;
+            if (isEdit) {
+                dispatch(updateUserRequest(values));
+            } else {
+                dispatch(createUserRequest(values));
+            }
+            setOpen(!open);
             form.resetFields();
         } catch (error) {
             console.error("Validation error:", error);
@@ -51,21 +72,22 @@ const UserModal: React.FC<UserModalProps> = ({
     useEffect(() => {
         if (
             typeof userToEdit !== "undefined" &&
-            Object.keys(userToEdit).length > 0
+            Object.keys(userToEdit).length > 0 &&
+            isEdit
         ) {
-            console.log("in iffffff", userToEdit);
             setInitialValue(userToEdit);
             form.setFieldsValue(userToEdit);
         } else {
-            console.log("user", userToEdit);
-            setInitialValue({});
+            setEditUser({});
+            setInitialValue({ firstName: "", email: "", phone: "", age: null });
             form.setFieldsValue({});
         }
-    }, [form, open, userToEdit]);
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [form, isEdit, open, setEditUser]);
     return (
         <Modal
             open={open}
+            destroyOnClose={true}
             title={isEdit ? "Edit User" : "Add User"}
             onCancel={handleCancel}
             onOk={handleSave}
@@ -75,6 +97,7 @@ const UserModal: React.FC<UserModalProps> = ({
                 </Button>,
                 <Button
                     key="save"
+                    loading={isLoading}
                     className="bg-[#3e79f7] hover:text-[#3e79f7] hover:bg-[#fff] text-[#fff] "
                     type="primary"
                     onClick={handleSave}
@@ -83,18 +106,27 @@ const UserModal: React.FC<UserModalProps> = ({
                 </Button>,
             ]}
         >
-            <Form form={form} initialValues={initialValue} layout="vertical">
-                <Form.Item
-                    label="First Name"
+            <Form
+                preserve={false}
+                form={form}
+                initialValues={initialValue}
+                layout="vertical"
+            >
+                <p className="text-[14px] font-poppins text-left font-[400]">
+                    FirstName <span className="text-red-600">*</span>
+                </p>
+                <Form.Item<User>
                     name="firstName"
                     rules={[
                         { required: true, message: "First Name is required" },
                     ]}
                 >
-                    <Input />
+                    <Input placeholder="Enter FirstName" />
                 </Form.Item>
-                <Form.Item
-                    label="Email"
+                <p className="text-[14px] font-poppins text-left font-[400]">
+                    Email <span className="text-red-600">*</span>
+                </p>
+                <Form.Item<User>
                     name="email"
                     rules={[
                         { required: true, message: "Email is required" },
@@ -104,19 +136,24 @@ const UserModal: React.FC<UserModalProps> = ({
                         },
                     ]}
                 >
-                    <Input />
+                    <Input placeholder="Enter Email" />
                 </Form.Item>
-                <Form.Item label="Age" name="age">
-                    <Input />
+                <p className="text-[14px] font-poppins text-left font-[400]">
+                    Age
+                </p>
+                <Form.Item<User> name="age">
+                    <Input placeholder="Enter Age" />
                 </Form.Item>
-                <Form.Item
-                    label="Phone Number"
+                <p className="text-[14px] font-poppins text-left font-[400]">
+                    Phone Number <span className="text-red-600">*</span>
+                </p>
+                <Form.Item<User>
                     name="phone"
                     rules={[
                         { required: true, message: "Phone Number is required" },
                     ]}
                 >
-                    <Input />
+                    <Input placeholder="Enter Phone Number" />
                 </Form.Item>
             </Form>
         </Modal>

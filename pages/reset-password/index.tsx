@@ -1,12 +1,17 @@
-import Layout from "@/components/Layout";
 import ResetPassword from "@/components/ResetPassword";
+import Head from "next/head";
 import React from "react";
 
 const ResetPasswordPage: React.FC = () => {
     return (
-        <Layout title="Reset Password">
+        <div>
+            <Head>
+                <title>Reset Password</title>
+                {/* Add other meta tags here */}
+            </Head>
+
             <ResetPassword />
-        </Layout>
+        </div>
     );
 };
 

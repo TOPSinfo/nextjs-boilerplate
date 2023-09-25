@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
     Button,
-    Card,
     Col,
     Dropdown,
     Layout,
@@ -25,9 +24,15 @@ import {
     PlusOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { fetchUsersRequest } from "@/redux/actions/user.action";
+import {
+    deleteUserRequest,
+    fetchUsersRequest,
+} from "@/redux/actions/user.action";
 import UserModal from "./UserModal";
-
+import swal from "sweetalert";
+interface UserListProps {
+    fetchUsers?: () => Promise<any[]>; // Define the prop type
+}
 type User = {};
 type UserModalState = {
     id: string;
@@ -37,7 +42,7 @@ type UserModalState = {
     age: number;
 };
 
-const Users: React.FC = () => {
+const Users: React.FC<UserListProps> = () => {
     const dispatch = useDispatch();
     const userData = useSelector((state: RootState) => state.userReducer);
     const isLoading = useSelector(
@@ -46,6 +51,7 @@ const Users: React.FC = () => {
     const [users, setUsers] = useState<User[] | []>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [id, setID] = useState<string>("");
 
     const [editUser, setEditUser] = useState<UserModalState | {}>({});
     const handleEdit = () => {
@@ -67,6 +73,19 @@ const Users: React.FC = () => {
     useEffect(() => {
         dispatch(fetchUsersRequest());
     }, [dispatch]);
+
+    const handleDelete = () => {
+        swal({
+            title: "Are you sure you want to delete this user?",
+            icon: "warning",
+            buttons: [true, true],
+            dangerMode: true,
+        }).then(willDelete => {
+            if (willDelete) {
+                dispatch(deleteUserRequest(id));
+            }
+        });
+    };
     const items: MenuProps["items"] = [
         {
             label: (
@@ -92,9 +111,9 @@ const Users: React.FC = () => {
         },
         {
             label: (
-                <>
+                <div onClick={handleDelete}>
                     <DeleteOutlined className="pr-[10px]" /> Delete
-                </>
+                </div>
             ),
             key: "delete",
         },
@@ -124,7 +143,7 @@ const Users: React.FC = () => {
         {
             title: "Action",
             key: "action",
-            render: (_, record) => (
+            render: (_, record: any) => (
                 <Dropdown
                     align={{ offset: [-90, -80] }}
                     menu={{ items }}
@@ -132,7 +151,10 @@ const Users: React.FC = () => {
                 >
                     <Space size="middle">
                         <MoreOutlined
-                            onClick={() => setEditUser(record)}
+                            onClick={() => {
+                                setEditUser(record);
+                                setID(record.id);
+                            }}
                             className="text-[24px] cursor-pointer"
                         />
                     </Space>
@@ -198,13 +220,17 @@ const Users: React.FC = () => {
                             )}
                         </Col>
                     </Row>
-                    <UserModal
-                        open={open}
-                        setOpen={setOpen}
-                        userToEdit={editUser}
-                        isEdit={isEdit}
-                        setIsEdit={setIsEdit}
-                    />
+                    {open && (
+                        <UserModal
+                            open={open}
+                            id={id}
+                            setOpen={setOpen}
+                            userToEdit={editUser}
+                            isEdit={isEdit}
+                            setIsEdit={setIsEdit}
+                            setEditUser={setEditUser}
+                        />
+                    )}
                 </>
             </div>
         </Layout.Content>
