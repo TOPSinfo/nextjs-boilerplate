@@ -12,6 +12,9 @@ import {
     DELETE_USER_REQUEST,
     DELETE_USER_SUCCESS,
     DELETE_USER_FAIL,
+    VIEW_USER_REQUEST,
+    VIEW_USER_SUCCESS,
+    VIEW_USER_FAIL,
 } from "../constant";
 
 type User = {
@@ -35,7 +38,15 @@ type UpdateUser = {
     age?: number;
 };
 
-// type of request action
+type ViewUser = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    age: number;
+    phone: string;
+};
+
+// type of request action for fetch users
 export interface FetchUsersRequestAction
     extends Action<typeof USERS_LIST_REQUEST> {}
 
@@ -48,6 +59,7 @@ export interface FetchUsersFailureAction
     extends Action<typeof USERS_LIST_FAIL> {
     error: string;
 }
+// type of request action for add users
 export interface CreateUsersRequestAction
     extends Action<typeof CREATE_USER_REQUEST> {
     payload: { user: CreateUser }; // Replace 'User' with your actual user data type
@@ -62,6 +74,7 @@ export interface CreateUsersFailureAction
     extends Action<typeof CREATE_USER_FAIL> {
     error: string;
 }
+// type of request action for update users
 export interface UpdateUsersRequestAction
     extends Action<typeof UPDATE_USER_REQUEST> {
     payload: { user: UpdateUser }; // Replace 'User' with your actual user data type
@@ -76,9 +89,11 @@ export interface UpdateUsersFailureAction
     extends Action<typeof UPDATE_USER_FAIL> {
     error: string;
 }
+// type of request action for delete users
+
 export interface DeleteUsersRequestAction
     extends Action<typeof DELETE_USER_REQUEST> {
-    payload: { id: string }; // Replace 'User' with your actual user data type
+    payload: { id: string  }; // Replace 'User' with your actual user data type
 }
 
 export interface DeleteUsersSuccessAction
@@ -86,6 +101,20 @@ export interface DeleteUsersSuccessAction
 
 export interface DeleteUsersFailureAction
     extends Action<typeof DELETE_USER_FAIL> {
+    error: string;
+}
+// type of request action for view users details
+export interface ViewUsersRequestAction
+    extends Action<typeof VIEW_USER_REQUEST> {
+    payload: { id: string | undefined | string[] }; // Replace 'User' with your actual user data type
+}
+
+export interface ViewUsersSuccessAction
+    extends Action<typeof VIEW_USER_SUCCESS> {
+    payload: { user: null | ViewUser; }; // Replace 'User' with your actual user data type
+}
+
+export interface ViewUsersFailureAction extends Action<typeof VIEW_USER_FAIL> {
     error: string;
 }
 export type UserActionTypes =
@@ -101,9 +130,12 @@ export type CreateUserActionTypes =
     | UpdateUsersFailureAction
     | DeleteUsersRequestAction
     | DeleteUsersSuccessAction
-    | DeleteUsersFailureAction;
+    | DeleteUsersFailureAction
+    | ViewUsersRequestAction
+    | ViewUsersSuccessAction
+    | ViewUsersFailureAction;
 
-// Export action creators
+// Export action creators for fetch users
 export const fetchUsersRequest = (): FetchUsersRequestAction => ({
     type: USERS_LIST_REQUEST,
 });
@@ -117,6 +149,7 @@ export const fetchUsersFailure = (error: string): FetchUsersFailureAction => ({
     type: USERS_LIST_FAIL,
     error,
 });
+// Export action creators for create users
 
 export const createUserRequest = (
     user: CreateUser
@@ -138,6 +171,7 @@ export const createUserFailure = (error: string): CreateUsersFailureAction => ({
     type: CREATE_USER_FAIL,
     error,
 });
+// Export action creators for update users
 
 export const updateUserRequest = (
     user: UpdateUser
@@ -159,7 +193,7 @@ export const updateUserFailure = (error: string): UpdateUsersFailureAction => ({
     type: UPDATE_USER_FAIL,
     error,
 });
-
+// Export action creators for delete users
 export const deleteUserRequest = (id: string): DeleteUsersRequestAction => ({
     type: DELETE_USER_REQUEST,
     payload: {
@@ -173,5 +207,24 @@ export const deleteUserSuccess = (): DeleteUsersSuccessAction => ({
 
 export const deleteUserFailure = (error: string): DeleteUsersFailureAction => ({
     type: DELETE_USER_FAIL,
+    error,
+});
+// Export action creators for view users
+export const viewUsersRequest = (id: string | undefined | string[]): ViewUsersRequestAction => ({
+    type: VIEW_USER_REQUEST,
+    payload: {
+        id,
+    },
+});
+
+export const viewUserSuccess = (user: ViewUser): ViewUsersSuccessAction => ({
+    type: VIEW_USER_SUCCESS,
+    payload: {
+        user,
+    },
+});
+
+export const viewUserFailure = (error: string): ViewUsersFailureAction => ({
+    type: VIEW_USER_FAIL,
     error,
 });

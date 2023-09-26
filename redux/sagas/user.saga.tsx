@@ -12,12 +12,15 @@ import {
     deleteUserRequest,
     deleteUserSuccess,
     deleteUserFailure,
+    viewUserSuccess,
+    viewUserFailure,
 } from "../actions/user.action";
 import {
     CREATE_USER_REQUEST,
     DELETE_USER_REQUEST,
     UPDATE_USER_REQUEST,
     USERS_LIST_REQUEST,
+    VIEW_USER_REQUEST,
 } from "../constant";
 import axios from "axios";
 import { hideLoader, showLoader } from "../actions/login.action";
@@ -67,7 +70,7 @@ export function* fetchUsers(): any {
         yield put(hideLoader());
     }
 }
-
+//  Replace with your API call function to create user
 const createUser = async (user: CreateUser): Promise<UserState> => {
     const userData = {
         email: user.email,
@@ -97,6 +100,7 @@ function* createUserSaga(action: ReturnType<typeof createUserRequest>): any {
         yield put(hideLoader());
     }
 }
+//  Replace with your API call function to update user
 const updateUser = async (user: EditUser): Promise<UserState> => {
     const userData = {
         email: user.email,
@@ -125,6 +129,8 @@ function* updateUserSaga(action: ReturnType<typeof updateUserRequest>): any {
         yield put(hideLoader());
     }
 }
+//  Replace with your API call function to delete user
+
 const deleteUser = async (id: string): Promise<UserState> => {
     return await axios
         .delete(`https://dummyjson.com/users/${id}`)
@@ -147,6 +153,28 @@ function* deleteUserSaga(action: ReturnType<typeof deleteUserRequest>): any {
         yield put(hideLoader());
     }
 }
+//  Replace with your API call function to show user details
+
+const userDetails = async (id: string | undefined): Promise<UserState> => {
+    return await axios
+        .get(`https://dummyjson.com/users/${id}`)
+        .then(response => response.data)
+        .catch(err => {
+            throw err;
+        });
+};
+function* UserDetailSaga(action: ReturnType<typeof deleteUserRequest>): any {
+    yield put(showLoader());
+    try {
+        const user = yield call(userDetails, action.payload.id);
+        yield put(viewUserSuccess(user));
+    } catch (error: any) {
+        toast.error(error);
+        yield put(viewUserFailure(error));
+    } finally {
+        yield put(hideLoader());
+    }
+}
 
 // Saga watcher function
 export function* userSaga() {
@@ -160,4 +188,5 @@ export function* createUsersSaga() {
 export function* updateUsers() {
     yield takeEvery(UPDATE_USER_REQUEST, updateUserSaga);
     yield takeEvery(DELETE_USER_REQUEST, deleteUserSaga);
+    yield takeEvery(VIEW_USER_REQUEST, UserDetailSaga);
 }

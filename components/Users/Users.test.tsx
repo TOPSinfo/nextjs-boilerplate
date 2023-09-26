@@ -11,6 +11,7 @@ import "../../mockMatchMedia";
 
 const mockStore = configureMockStore();
 const mockDispatch = jest.fn();
+jest.mock("next/router", () => jest.requireActual("next-router-mock"));
 
 jest.mock("react-redux", () => ({
     useDispatch: () => mockDispatch,

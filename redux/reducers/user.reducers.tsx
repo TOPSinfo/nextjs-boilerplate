@@ -12,6 +12,9 @@ import {
     DELETE_USER_REQUEST,
     DELETE_USER_SUCCESS,
     DELETE_USER_FAIL,
+    VIEW_USER_SUCCESS,
+    VIEW_USER_REQUEST,
+    VIEW_USER_FAIL,
 } from "../constant";
 
 type User = {
@@ -35,9 +38,20 @@ const initialState: UserState = {
     skip: 0,
     error: null,
 };
-
+type ViewUser = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    age: number;
+    phone: string;
+};
 export interface addUser {
-    user: Object | null;
+    user: Object | null | undefined;
+    error: string | null;
+}
+
+export interface viewUser {
+    user: ViewUser | null | undefined;
     error: string | null;
 }
 export interface deleteUser {
@@ -46,7 +60,11 @@ export interface deleteUser {
 }
 // Define the initial  state
 const createinitialState: addUser = {
-    user: null,
+    user: null ,
+    error: null,
+};
+const viewInitialState: viewUser = {
+    user: null ,
     error: null,
 };
 const deleteinitialState: deleteUser = {
@@ -150,7 +168,7 @@ export const updateUserReducer = (
     }
 };
 
-//delte reducer function
+//delete reducer function
 export const deleteUserReducer = (
     state = deleteinitialState,
     action: CreateUserActionTypes
@@ -174,6 +192,37 @@ export const deleteUserReducer = (
             return {
                 ...state,
                 success: false,
+                error: action.error,
+            };
+
+        default:
+            return state;
+    }
+};
+
+//user details reducer function
+export const viewUserReducer = (
+    state = viewInitialState,
+    action: CreateUserActionTypes
+): viewUser => {
+    switch (action.type) {
+        case VIEW_USER_REQUEST:
+            return {
+                ...state,
+                error: null,
+            };
+
+        case VIEW_USER_SUCCESS:
+            return {
+                ...state,
+                user: action.payload.user,
+                error: null,
+            };
+
+        case VIEW_USER_FAIL:
+            return {
+                ...state,
+                user: null,
                 error: action.error,
             };
 

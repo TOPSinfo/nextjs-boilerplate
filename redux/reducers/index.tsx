@@ -7,7 +7,8 @@ import {
     userReducer,
     createUserReducer,
     updateUserReducer,
-    deleteUserReducer
+    deleteUserReducer,
+    viewUserReducer
 } from "./user.reducers";
 
 const rootReducer = combineReducers({
@@ -19,7 +20,8 @@ const rootReducer = combineReducers({
     userReducer,
     createUserReducer,
     updateUserReducer,
-    deleteUserReducer
+    deleteUserReducer,
+    viewUserReducer,
 });
 
 export default rootReducer;

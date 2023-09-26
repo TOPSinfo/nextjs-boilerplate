@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
     Button,
     Col,
@@ -30,6 +30,7 @@ import {
 } from "@/redux/actions/user.action";
 import UserModal from "./UserModal";
 import swal from "sweetalert";
+import { useRouter } from "next/router";
 interface UserListProps {
     fetchUsers?: () => Promise<any[]>; // Define the prop type
 }
@@ -44,6 +45,7 @@ type UserModalState = {
 
 const Users: React.FC<UserListProps> = () => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const userData = useSelector((state: RootState) => state.userReducer);
     const isLoading = useSelector(
         (state: RootState) => state.loaderReducer.loading
@@ -74,7 +76,7 @@ const Users: React.FC<UserListProps> = () => {
         dispatch(fetchUsersRequest());
     }, [dispatch]);
 
-    const handleDelete = () => {
+    const handleDelete = useCallback(() => {
         swal({
             title: "Are you sure you want to delete this user?",
             icon: "warning",
@@ -85,13 +87,13 @@ const Users: React.FC<UserListProps> = () => {
                 dispatch(deleteUserRequest(id));
             }
         });
-    };
+    }, [dispatch, id]);
     const items: MenuProps["items"] = [
         {
             label: (
-                <>
+                <div onClick={() => router.push(`/users/${id}`)}>
                     <EyeOutlined className="pr-[10px]" /> View
-                </>
+                </div>
             ),
             key: "view",
         },
@@ -198,6 +200,7 @@ const Users: React.FC<UserListProps> = () => {
                                         columns={columns}
                                         pagination={false}
                                         dataSource={users}
+                                        rowKey={"id"}
                                     />
                                 </>
                             )}{" "}
