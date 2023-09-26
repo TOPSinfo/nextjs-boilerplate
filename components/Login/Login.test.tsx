@@ -1,7 +1,7 @@
 import Login, { validateEmail } from "./index";
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom";
 import "../../mockMatchMedia";
 
 jest.mock("next/router", () => jest.requireActual("next-router-mock"));
@@ -17,7 +17,7 @@ jest.mock("react-toastify", () => ({
 }));
 
 describe("Test the Login Component", () => {
-    test("render the reset form on the screen", async () => {
+    test("render the login form on the screen", async () => {
         render(<Login />);
         expect(screen.getByText("Login")).toBeInTheDocument();
         const text = screen.getByText("Password");

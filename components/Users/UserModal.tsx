@@ -109,6 +109,7 @@ const UserModal: React.FC<UserModalProps> = ({
             <Form
                 preserve={false}
                 form={form}
+                autoComplete="off"
                 initialValues={initialValue}
                 layout="vertical"
             >
