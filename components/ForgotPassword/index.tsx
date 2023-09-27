@@ -6,7 +6,7 @@ import { forgotRequest } from "@/redux/actions/forgot.action";
 type User = {
     email: string;
 };
-
+// regex for validation of email
 export const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (regex.test(email)) {

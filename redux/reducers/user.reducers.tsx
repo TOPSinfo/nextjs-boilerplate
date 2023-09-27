@@ -45,29 +45,29 @@ type ViewUser = {
     age: number;
     phone: string;
 };
-export interface addUser {
+export interface AddUser {
     user: Object | null | undefined;
     error: string | null;
 }
 
-export interface viewUser {
+export interface ViewUserState {
     user: ViewUser | null | undefined;
     error: string | null;
 }
-export interface deleteUser {
+export interface DeleteUser {
     success: boolean;
     error: string | null;
 }
 // Define the initial  state
-const createinitialState: addUser = {
-    user: null ,
+const createinitialState: AddUser = {
+    user: null,
     error: null,
 };
-const viewInitialState: viewUser = {
-    user: null ,
+const viewInitialState: ViewUserState = {
+    user: null,
     error: null,
 };
-const deleteinitialState: deleteUser = {
+const deleteinitialState: DeleteUser = {
     success: false,
     error: null,
 };
@@ -110,7 +110,7 @@ export const userReducer = (
 export const createUserReducer = (
     state = createinitialState,
     action: CreateUserActionTypes
-): addUser => {
+): AddUser => {
     switch (action.type) {
         case CREATE_USER_REQUEST:
             return {
@@ -141,7 +141,7 @@ export const createUserReducer = (
 export const updateUserReducer = (
     state = createinitialState,
     action: CreateUserActionTypes
-): addUser => {
+): AddUser => {
     switch (action.type) {
         case UPDATE_USER_REQUEST:
             return {
@@ -172,7 +172,7 @@ export const updateUserReducer = (
 export const deleteUserReducer = (
     state = deleteinitialState,
     action: CreateUserActionTypes
-): deleteUser => {
+): DeleteUser => {
     switch (action.type) {
         case DELETE_USER_REQUEST:
             return {
@@ -204,7 +204,7 @@ export const deleteUserReducer = (
 export const viewUserReducer = (
     state = viewInitialState,
     action: CreateUserActionTypes
-): viewUser => {
+): ViewUserState => {
     switch (action.type) {
         case VIEW_USER_REQUEST:
             return {

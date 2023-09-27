@@ -1,10 +1,5 @@
 import React from "react";
-import {
-    render,
-    fireEvent,
-    act,
-    screen,
-} from "@testing-library/react";
+import { render, fireEvent, act, screen } from "@testing-library/react";
 import UserModal from "./UserModal"; // Import your UserModal component
 import "@testing-library/jest-dom";
 import "../../mockMatchMedia";
@@ -27,7 +22,7 @@ describe("UserModal Component", () => {
     // Your test cases will go here
     test("should display alert if error", async () => {
         // Render the UserModal component
-        const { getByPlaceholderText, getByText, getByRole } = render(
+        const { getByPlaceholderText, getByRole } = render(
             <UserModal
                 setOpen={() => {}}
                 isEdit={false}
@@ -56,7 +51,7 @@ describe("UserModal Component", () => {
     });
     test("adds a new user", async () => {
         // Render the UserModal component
-        const { getByText, getByPlaceholderText, getByRole } = render(
+        const { getByRole } = render(
             <UserModal
                 setOpen={() => {}}
                 isEdit={false}
@@ -85,10 +80,8 @@ describe("UserModal Component", () => {
 
         // You can add assertions here to verify the user was added successfully
 
-        setTimeout(async () => {
-            const toastText = await screen.findByText(
-                /User created successfully/i
-            );
+        setTimeout(() => {
+            const toastText = screen.findByText(/User created successfully/i);
             expect(toastText).toBeInTheDocument();
         }, 300);
         // Verify that the user is added to the store or database
@@ -107,7 +100,7 @@ describe("UserModal Component", () => {
         };
 
         // Render the UserModal component with the userToEdit and isEdit flag
-        const { getByText, getByPlaceholderText, getByRole } = render(
+        const { getByPlaceholderText, getByRole } = render(
             <UserModal
                 open={true}
                 setIsEdit={() => {}}
@@ -141,8 +134,8 @@ describe("UserModal Component", () => {
 
         // You can add assertions here to verify the user was updated successfully
         await act(async () => {
-            setTimeout(async () => {
-                const toastText = await screen.findByText(
+            setTimeout(() => {
+                const toastText = screen.findByText(
                     /User updated successfully/i
                 );
                 expect(toastText).toBeInTheDocument();

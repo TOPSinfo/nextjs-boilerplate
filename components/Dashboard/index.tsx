@@ -9,6 +9,7 @@ import {
     LineController,
     LineElement,
 } from "chart.js";
+// register chart component
 Chart.register(CategoryScale);
 Chart.register(LinearScale);
 Chart.register(PointElement);
@@ -25,6 +26,7 @@ interface PieChartProps {
     }[];
 }
 const Dashboard: React.FC = () => {
+    // chart data for unique vistors
     const chartData: PieChartProps = {
         labels: ["January", "February", "March", "April", "May"],
         datasets: [

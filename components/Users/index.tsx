@@ -14,7 +14,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import type { ColumnsType } from "antd/es/table";
-
 import Loader from "../Loader";
 import {
     DeleteOutlined,
@@ -31,6 +30,7 @@ import {
 import UserModal from "./UserModal";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
+
 interface UserListProps {
     fetchUsers?: () => Promise<any[]>; // Define the prop type
 }
@@ -54,28 +54,33 @@ const Users: React.FC<UserListProps> = () => {
     const [open, setOpen] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [id, setID] = useState<string>("");
-
     const [editUser, setEditUser] = useState<UserModalState | {}>({});
+
+    // open the edit modal
     const handleEdit = () => {
         setIsEdit(true);
         setOpen(!open);
     };
+    // open the add modal
     const handleCreate = () => {
         setOpen(!open);
         setIsEdit(false);
         setEditUser({});
     };
 
+    // set the users list
     useEffect(() => {
         if (userData) {
             setUsers(userData?.users);
         }
     }, [userData]);
 
+    // fetch the user data
     useEffect(() => {
         dispatch(fetchUsersRequest());
     }, [dispatch]);
 
+    //delete the user
     const handleDelete = useCallback(() => {
         swal({
             title: "Are you sure you want to delete this user?",
@@ -88,6 +93,8 @@ const Users: React.FC<UserListProps> = () => {
             }
         });
     }, [dispatch, id]);
+
+    // user actions
     const items: MenuProps["items"] = [
         {
             label: (
@@ -120,6 +127,7 @@ const Users: React.FC<UserListProps> = () => {
             key: "delete",
         },
     ];
+    // table header
     const columns: ColumnsType<User> = [
         {
             title: "Name",
@@ -167,7 +175,7 @@ const Users: React.FC<UserListProps> = () => {
 
     return (
         <Layout.Content
-            data-testid="users-component"
+            data-testid="users-component" /* add test id for test cases */
             className="bg-[#F0F2F5] pl-[200px] overflow-hidden"
         >
             <div className="bg-[#F0F2F5]">
@@ -204,6 +212,7 @@ const Users: React.FC<UserListProps> = () => {
                                     />
                                 </>
                             )}{" "}
+                            {/* add pagination for all users */}
                             {userData && (
                                 <Pagination
                                     className="text-right mt-[20px]"
@@ -223,6 +232,7 @@ const Users: React.FC<UserListProps> = () => {
                             )}
                         </Col>
                     </Row>
+                    {/* add common modal for add & edit users */}
                     {open && (
                         <UserModal
                             open={open}

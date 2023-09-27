@@ -14,6 +14,7 @@ type User = {
     phone: string;
 };
 
+// user details page
 const ViewUsers: React.FC = () => {
     const [userData, setUserData] = useState<User | null>(null);
     const router = useRouter();
@@ -22,7 +23,8 @@ const ViewUsers: React.FC = () => {
     const isLoading = useSelector(
         (state: RootState) => state.loaderReducer.loading
     );
-
+    
+    // get the user id from params
     useEffect(() => {
         if (router.query.id) {
             dispatch(viewUsersRequest(router.query.id));
@@ -30,7 +32,7 @@ const ViewUsers: React.FC = () => {
     }, [dispatch, router.query.id]);
 
     useEffect(() => {
-        if (userDetail && userDetail.user) {
+        if (userDetail?.user) {
             setUserData(userDetail.user);
         }
     }, [userDetail]);

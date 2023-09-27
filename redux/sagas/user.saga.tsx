@@ -1,4 +1,4 @@
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 import {
     fetchUsersSuccess,
     fetchUsersFailure,
@@ -142,7 +142,7 @@ const deleteUser = async (id: string): Promise<UserState> => {
 function* deleteUserSaga(action: ReturnType<typeof deleteUserRequest>): any {
     yield put(showLoader());
     try {
-        const user = yield call(deleteUser, action.payload.id);
+        yield call(deleteUser, action.payload.id);
         yield put(deleteUserSuccess());
         toast.success("User deleted successfully");
         yield put(fetchUsersRequest());

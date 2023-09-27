@@ -11,7 +11,6 @@ const antIcon = <LoadingOutlined style={{ fontSize: 48 }} spin />;
 // common loader file
 const Loader: React.FC = () => {
     const isLoading = useSelector((state: RootState) => state.loaderReducer);
-    console.log("isLoading: " + isLoading.loading);
 
     return isLoading.loading ? (
         <div

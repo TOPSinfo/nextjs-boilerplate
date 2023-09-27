@@ -20,16 +20,14 @@ interface UserModalProps {
     setOpen: (value: boolean) => void;
     setIsEdit: (value: boolean) => void;
     isEdit: boolean;
-    onSave?: (user: User) => void;
     userToEdit?: User | {};
-    setEditUser: ({}) => void;
+    setEditUser: (p: {}) => void;
     id: string;
 }
 
 const UserModal: React.FC<UserModalProps> = ({
     open,
     setOpen,
-    onSave,
     userToEdit,
     isEdit,
     setIsEdit,
@@ -41,6 +39,7 @@ const UserModal: React.FC<UserModalProps> = ({
     const isLoading = useSelector(
         (state: RootState) => state.loaderReducer.loading
     );
+    // form initialization
     const [initialValue, setInitialValue] = useState<User | {}>({
         firstName: "",
         email: "",
@@ -48,12 +47,14 @@ const UserModal: React.FC<UserModalProps> = ({
         age: null,
         id: "",
     });
+    // close the modal
     const handleCancel = () => {
         setOpen(!open);
         form.resetFields();
         setIsEdit(false);
         setInitialValue({ firstName: "", email: "", phone: "", age: null });
     };
+    // saving the form
     const handleSave = async () => {
         try {
             const values = await form.validateFields();
@@ -69,6 +70,7 @@ const UserModal: React.FC<UserModalProps> = ({
             console.error("Validation error:", error);
         }
     };
+    // set form data 
     useEffect(() => {
         if (
             typeof userToEdit !== "undefined" &&

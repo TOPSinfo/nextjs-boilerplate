@@ -45,12 +45,10 @@ describe("Test the ForgotPassword Component", () => {
 
         userEvent.type(email, "test");
         userEvent.click(buttonList[0]);
-        setTimeout(async () => {
-            const basic_email_help = await screen.getByText(
-                "Email is required"
-            );
+        setTimeout(() => {
+            const basic_email_help = screen.getByText("Email is required");
             expect(basic_email_help).toBeInTheDocument();
-        }, 2000);
+        }, 500);
     });
     test("should link", async () => {
         render(<ForgotPassword />);
@@ -61,7 +59,7 @@ describe("Test the ForgotPassword Component", () => {
         expect(links[0].href).toContain("/");
     });
     test("should be able to submit the form", async () => {
-        const { getByTestId, queryByText } = render(<ForgotPassword />);
+        const { queryByText } = render(<ForgotPassword />);
         const email = screen.getByPlaceholderText("Enter email");
         const btnList = screen.getByRole("button", { name: /Send/i });
         // Simulate a user input

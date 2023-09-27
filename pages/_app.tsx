@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import ToastHelper from "@/helpers/toast.helper";
 import { ConfigProvider } from "antd";
 import { PersistGate } from "redux-persist/integration/react";
-import Loader from "@/components/Loader";
+import AuthGuard from "@/helpers/AuthGuard"; // Adjust the import path as needed
 
 interface CustomAppProps extends Omit<AppProps, "Component"> {
     Component: AppProps["Component"];
@@ -16,15 +16,17 @@ const App = ({ Component, pageProps }: CustomAppProps) => {
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <ToastHelper>
-                    <ConfigProvider
-                        theme={{
-                            token: {
-                                fontFamily: "Poppins",
-                            },
-                        }}
-                    >
-                        <Component {...pageProps} />
-                    </ConfigProvider>
+                    <AuthGuard>
+                        <ConfigProvider
+                            theme={{
+                                token: {
+                                    fontFamily: "Poppins",
+                                },
+                            }}
+                        >
+                            <Component {...pageProps} />
+                        </ConfigProvider>
+                    </AuthGuard>
                 </ToastHelper>
             </PersistGate>
         </Provider>

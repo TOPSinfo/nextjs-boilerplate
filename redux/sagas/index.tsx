@@ -24,6 +24,6 @@ export default function* rootSaga() {
         watchResetRequest(),
         userSaga(),
         createUsersSaga(),
-        updateUsers()
+        updateUsers(),
     ]);
 }

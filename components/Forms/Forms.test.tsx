@@ -1,10 +1,5 @@
 import React from "react";
-import {
-    render,
-    fireEvent,
-    waitFor,
-    screen,
-} from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import Forms from "./index"; // Import your Forms component
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
@@ -17,9 +12,7 @@ describe("Forms Component", () => {
     });
     test("should display alert if error", async () => {
         // Render the UserModal component
-        const { getByPlaceholderText, getByText, getByRole } = render(
-            <Forms />
-        );
+        const { getByPlaceholderText, getByRole } = render(<Forms />);
 
         // Find input fields and Save button
         const addressInput = getByPlaceholderText("Enter Address");
@@ -39,7 +32,7 @@ describe("Forms Component", () => {
     });
     test("submits the form with valid data", async () => {
         // Render the Forms component
-        const { getByLabelText, getByText, getByTestId } = render(<Forms />);
+        const { getByText } = render(<Forms />);
 
         // Fill in the form fields with valid data
         userEvent.type(getByText("Username"), "john_doe");
@@ -54,13 +47,13 @@ describe("Forms Component", () => {
         fireEvent.click(
             getByText("I have read the Agreement of Terms & Policies")
         );
-        const questionDropdown = await screen.getByTestId("select-multiple");
+        const questionDropdown = screen.getByTestId("select-multiple");
 
         fireEvent.click(questionDropdown);
         // basically, you should be able to find the elements of the
         // dropdown after you fire the click even on the select
-        setTimeout(async () => {
-            const questionOneEle = await screen.getByText("MEAN STACK");
+        setTimeout(() => {
+            const questionOneEle = screen.getByText("MEAN STACK");
             fireEvent.click(questionOneEle);
             expect(questionDropdown).toHaveValue("mean");
         }, 100);
@@ -72,8 +65,5 @@ describe("Forms Component", () => {
         fireEvent.click(getByText("Submit"));
 
         // Wait for success message or navigate to a new page (if applicable)
-        await waitFor(() => {
-            // You can add assertions here for success messages or page navigation
-        });
     });
 });

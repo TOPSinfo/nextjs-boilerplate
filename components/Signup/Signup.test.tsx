@@ -1,12 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "../../mockMatchMedia";
 import Signup from "./index"; // Update the import path to match your project structure
 import mockRouter from "next-router-mock";
 import "@testing-library/jest-dom";
 import { validateEmail } from "../Login";
-import { act } from "@testing-library/react";
 
 jest.mock("next/router", () => jest.requireActual("next-router-mock"));
 jest.mock("react-redux", () => ({
@@ -30,7 +29,7 @@ describe("next-router-mock", () => {
 
         // Render the component:
         render(<Signup />);
-        expect(await screen.getByRole("button", { name: /Sign Up/i }));
+        expect(screen.getByRole("button", { name: /Sign Up/i }));
 
         // Click the button:
         userEvent.click(screen.getByRole("button"));
@@ -41,7 +40,7 @@ describe("next-router-mock", () => {
                 asPath: "/",
                 pathname: "/",
             });
-        }, 2000);
+        }, 500);
     });
 });
 describe("Signup Component", () => {
@@ -96,21 +95,15 @@ describe("Signup Component", () => {
         userEvent.type(phnNumber, "");
 
         userEvent.click(buttonList[0]);
-        setTimeout(async () => {
-            const basic_email_help = await screen.getByText(
-                "Email is required"
-            );
-            const basic_password = await screen.getByText(
-                "Password is required"
-            );
-            const basic_username = await screen.getByText(
-                "Username is required"
-            );
-            const confPassword_text = await screen.getByText(
+        setTimeout(() => {
+            const basic_email_help = screen.getByText("Email is required");
+            const basic_password = screen.getByText("Password is required");
+            const basic_username = screen.getByText("Username is required");
+            const confPassword_text = screen.getByText(
                 "Confirm Password is required"
             );
-            const phn_text = await screen.getByText("Phone Number is required");
-            const gender_text = await screen.getByText("Gender is required");
+            const phn_text = screen.getByText("Phone Number is required");
+            const gender_text = screen.getByText("Gender is required");
             const checkbox = container.querySelectorAll(
                 "input[type='checkbox']"
             )[0] as HTMLInputElement;

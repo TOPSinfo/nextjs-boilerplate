@@ -16,7 +16,7 @@ import moment from "moment";
 import React from "react";
 const { Option } = Select;
 const { TextArea } = Input;
-
+// type of user
 type User = {
     email: string;
     password: string;
@@ -49,6 +49,7 @@ const tailFormItemLayout = {
         },
     },
 };
+// submit values
 const handleSubmit = (values: User) => {
     const data = {
         ...values,
@@ -56,6 +57,7 @@ const handleSubmit = (values: User) => {
     };
     console.log("values: ", data);
 };
+// example of all type of fields
 const Forms: React.FC = () => {
     return (
         <>

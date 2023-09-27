@@ -1,9 +1,5 @@
 import React from "react";
-import {
-    render,
-    screen,
-    act,
-} from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import configureMockStore from "redux-mock-store";
 import Users from "./index"; // Import the Users component
 import "@testing-library/jest-dom";
@@ -46,7 +42,7 @@ describe("Users Component", () => {
     });
 
     test("renders Users page correctly", async () => {
-        const { getByText, getByTestId, getByRole } = render(<Users />);
+        const { getByText, getByTestId } = render(<Users />);
 
         // Check if the Users page title is rendered
         expect(getByText("Users")).toBeInTheDocument();

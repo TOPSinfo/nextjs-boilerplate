@@ -43,9 +43,7 @@ describe("AppHeader Component", () => {
         const mockDispatch = jest.fn();
         const useDispatchSpy = jest.spyOn(redux, "useDispatch");
         useDispatchSpy.mockReturnValue(mockDispatch);
-
-        const store = mockStore({});
-        const { getByTestId } = render(<AppHeader />);
+        render(<AppHeader />);
         const profileDropdown = screen.getByTestId("profile-dropdown");
         fireEvent.click(profileDropdown);
         await act(async () => {
@@ -61,7 +59,7 @@ describe("AppHeader Component", () => {
         });
     });
     test("redirect to profile page when the Profile is clicked", async () => {
-        const { getByTestId } = render(<AppHeader />);
+        render(<AppHeader />);
         const profileDropdown = screen.getByTestId("profile-dropdown");
         fireEvent.click(profileDropdown);
         await act(async () => {

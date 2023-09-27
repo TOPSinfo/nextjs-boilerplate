@@ -25,7 +25,7 @@ describe("Sidebar Component", () => {
     });
 
     test("navigates to the selected menu item", () => {
-        const { getByText } = render(<Sidebar />);
+        render(<Sidebar />);
         const sidebarElement = screen.getByTitle("Users");
 
         fireEvent.click(sidebarElement);

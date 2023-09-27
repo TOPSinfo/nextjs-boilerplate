@@ -38,14 +38,14 @@ describe("Test the Reset Password Component", () => {
         userEvent.type(newpassword, "");
         userEvent.type(cnfpassword, "");
         userEvent.click(buttonList[0]);
-        setTimeout(async () => {
-            const password_err = await screen.getByText("Password is required");
+        setTimeout(() => {
+            const password_err = screen.getByText("Password is required");
             expect(password_err).toBeInTheDocument();
-            const cnf_password_err = await screen.getByText(
+            const cnf_password_err = screen.getByText(
                 "Confirm Password is required"
             );
             expect(cnf_password_err).toBeInTheDocument();
-        }, 2000);
+        }, 700);
     });
     test("should be able to submit the form", async () => {
         const { queryByText } = render(<ResetPassword />);
@@ -61,7 +61,7 @@ describe("Test the Reset Password Component", () => {
         });
         // Wait for success message or any other confirmation element
         await act(async () => {
-            userEvent.type(screen.getByText("Submit"),"Enter");
+            userEvent.type(screen.getByText("Submit"), "Enter");
             expect(queryByText("Password is required")).not.toBeInTheDocument();
             expect(
                 queryByText("Confirm Password is required")

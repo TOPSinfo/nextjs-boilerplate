@@ -1,5 +1,5 @@
 import React from "react";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import DashboardPage from "@/pages/dashboard"; // Adjust the import path as needed
 import "@testing-library/jest-dom";
 import "../../mockMatchMedia";

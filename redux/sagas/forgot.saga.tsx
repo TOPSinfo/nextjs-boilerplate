@@ -36,7 +36,6 @@ export function* forgotRequestSaga(
             toast.error(data?.message);
             yield put(forgotFail(data));
         }
-        
     } catch (err: any) {
         console.log("Error");
         toast.error(err.message);

@@ -54,6 +54,7 @@ export function* watchLoginRequest() {
 }
 
 export function* logoutSaga(action: ReturnType<typeof logout>) {
+    yield action;
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
     window.location.href = "/";

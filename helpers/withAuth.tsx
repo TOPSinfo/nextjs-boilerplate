@@ -1,7 +1,5 @@
-import { RootState } from "@/redux/store";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
 
 const withAuth = <P extends object>(
     WrappedComponent: React.ComponentType<P>
@@ -17,8 +15,9 @@ const withAuth = <P extends object>(
 
         useEffect(() => {
             // Perform authentication check here
+            console.log("isLoggedIn", isLoggedIn);
 
-            if (isLoggedIn === "false") {
+            if (isLoggedIn === "false" || isLoggedIn === null) {
                 // redirect to login page
                 router.push("/");
             }

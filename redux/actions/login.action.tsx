@@ -24,16 +24,16 @@ interface LoginFailAction {
 interface Logout {
     type: typeof LOGOUT;
 }
-interface showLoader {
+interface ShowLoaderAction {
     type: typeof SHOW_LOADER;
 }
-interface hideLoader {
+interface HideLoaderAction {
     type: typeof HIDE_LOADER;
 }
 export type AuthActionTypes =
     | LoginRequestAction
     | LoginSuccessAction
-    | LoginFailAction | showLoader | hideLoader;
+    | LoginFailAction | ShowLoaderAction | HideLoaderAction;
 
 export const loginRequest = (
     email: string,
@@ -64,10 +64,10 @@ export const logout = (): Logout => ({
     type: LOGOUT,
 });
 
-export const showLoader = (): showLoader => ({
+export const showLoader = (): ShowLoaderAction => ({
     type: SHOW_LOADER,
 });
 
-export const hideLoader = (): hideLoader => ({
+export const hideLoader = (): HideLoaderAction => ({
     type: HIDE_LOADER,
 });

@@ -1,16 +1,14 @@
 import React, { useEffect } from "react";
 import { Button, Card, Col, Form, Input, Row, Typography } from "antd";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
-import { loginRequest } from "@/redux/actions/login.action";
+import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { useRouter } from "next/router";
-import Loader from "../Loader";
+import { useRouter } from "next/router";;
 type User = {
     email: string;
     password: string;
 };
-
+// regex for validating email in test cases
 export const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (regex.test(email)) {
@@ -19,7 +17,6 @@ export const validateEmail = (email: string) => {
     return false;
 };
 const Login: React.FC = () => {
-    const dispatch = useDispatch();
     const router = useRouter();
     const loginData = useSelector((state: RootState) => state.loginReducer);
     useEffect(() => {
@@ -40,7 +37,7 @@ const Login: React.FC = () => {
         // dispatch(loginRequest(values.email, values.password));
     };
     return (
-        <div className=" h-screen bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto">
+        <div data-testid="login-component" className=" h-screen bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto">
             <Card
                 className="font-poppins w-[100%] max-w-[500px]"
                 bordered={false}

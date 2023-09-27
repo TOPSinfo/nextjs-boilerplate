@@ -15,7 +15,13 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
 
     useEffect(() => {
         const value = localStorage.getItem("isLoggedIn");
-        setIsAuth(value === "true" ? true : value === null ? null : false); // Use boolean value
+        if (value === "true") {
+            setIsAuth(true);
+        } else if (value === null) {
+            setIsAuth(null);
+        } else {
+            setIsAuth(false);
+        }
     }, []);
     return (
         <>
