@@ -36,6 +36,7 @@ type CreateUser = {
     email: string;
     phone: string;
     age?: number;
+    image: string;
 };
 type UserState = {
     user: CreateUser;
@@ -46,6 +47,7 @@ type EditUser = {
     phone: string;
     age?: number;
     id: number;
+    image: string;
 };
 // Replace with your API call function to fetch user data
 const fetchUserData = async (): Promise<User> => {
@@ -77,6 +79,7 @@ const createUser = async (user: CreateUser): Promise<UserState> => {
         firstName: user.firstName,
         phone: user.phone,
         age: user.age,
+        image: user.image,
     };
     return await axios
         .post("https://dummyjson.com/users/add", userData)
@@ -107,6 +110,7 @@ const updateUser = async (user: EditUser): Promise<UserState> => {
         firstName: user.firstName,
         phone: user.phone,
         age: user.age,
+        image: user.image,
     };
     return await axios
         .put(`https://dummyjson.com/users/${user.id}`, userData)

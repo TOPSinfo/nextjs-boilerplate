@@ -29,6 +29,7 @@ type CreateUser = {
     email: string;
     phone: string;
     age?: number;
+    image: string;
 };
 type UpdateUser = {
     id: number;
@@ -36,6 +37,7 @@ type UpdateUser = {
     email: string;
     phone: string;
     age?: number;
+    image: string;
 };
 
 type ViewUser = {

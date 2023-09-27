@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
+    Avatar,
     Button,
     Col,
     Dropdown,
@@ -41,6 +42,7 @@ type UserModalState = {
     email: string;
     phone: string;
     age: number;
+    image: string;
 };
 
 const Users: React.FC<UserListProps> = () => {
@@ -129,6 +131,13 @@ const Users: React.FC<UserListProps> = () => {
     ];
     // table header
     const columns: ColumnsType<User> = [
+        {
+            title: "Profile",
+            key: "image",
+            render: user => (
+                <Avatar size={50} src={user.image} className="" />
+            ),
+        },
         {
             title: "Name",
             dataIndex: "firstName",
