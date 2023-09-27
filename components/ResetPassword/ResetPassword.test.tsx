@@ -1,5 +1,5 @@
 import ResetPassword from "./index";
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import "../../mockMatchMedia";
@@ -28,24 +28,14 @@ describe("Test the Reset Password Component", () => {
     });
 
     test("should display alert if error", async () => {
-        render(<ResetPassword />);
-        const newpassword = screen.getByPlaceholderText("Enter new password");
-        const cnfpassword = screen.getByPlaceholderText(
-            "Enter confirm password"
-        );
-        const buttonList = screen.getAllByRole("button");
+        const { getByRole } = render(<ResetPassword />);
+        const saveButton = getByRole("button", { name: "Submit" });
 
-        userEvent.type(newpassword, "");
-        userEvent.type(cnfpassword, "");
-        userEvent.click(buttonList[0]);
-        setTimeout(() => {
-            const password_err = screen.getByText("Password is required");
-            expect(password_err).toBeInTheDocument();
-            const cnf_password_err = screen.getByText(
-                "Confirm Password is required"
-            );
-            expect(cnf_password_err).toBeInTheDocument();
-        }, 700);
+        fireEvent.click(saveButton);
+        expect(await screen.findByText("Password is required")).toBeVisible();
+        expect(
+            await screen.findByText("Confirm Password is required")
+        ).toBeVisible();
     });
     test("should be able to submit the form", async () => {
         const { queryByText } = render(<ResetPassword />);

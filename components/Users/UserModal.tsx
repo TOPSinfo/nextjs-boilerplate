@@ -70,7 +70,7 @@ const UserModal: React.FC<UserModalProps> = ({
             console.error("Validation error:", error);
         }
     };
-    // set form data 
+    // set form data
     useEffect(() => {
         if (
             typeof userToEdit !== "undefined" &&

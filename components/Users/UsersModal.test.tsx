@@ -82,8 +82,8 @@ describe("UserModal Component", () => {
 
         setTimeout(() => {
             const toastText = screen.findByText(/User created successfully/i);
-            expect(toastText).toBeInTheDocument();
-        }, 300);
+            expect(toastText).toBeVisible();
+        }, 1000);
         // Verify that the user is added to the store or database
         // You may need to access your Redux store or mock API calls here
         // For example, you can check if the user's data is in the Redux store
@@ -133,16 +133,10 @@ describe("UserModal Component", () => {
         fireEvent.click(saveButton);
 
         // You can add assertions here to verify the user was updated successfully
-        await act(async () => {
-            setTimeout(() => {
-                const toastText = screen.findByText(
-                    /User updated successfully/i
-                );
-                expect(toastText).toBeInTheDocument();
-            }, 500);
-            // Verify that the user's updated information is saved
-            // You may need to access your Redux store or mock API calls here
-            // For example, you can check if the user's data is updated in the Redux store
-        });
+
+        setTimeout(() => {
+            const toastText = screen.findByText(/User updated successfully/i);
+            expect(toastText).toBeInTheDocument();
+        }, 1000);
     });
 });

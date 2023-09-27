@@ -1,5 +1,5 @@
 import ForgotPassword, { validateEmail } from "./index";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import "../../mockMatchMedia";
@@ -39,16 +39,11 @@ describe("Test the ForgotPassword Component", () => {
     });
 
     test("should display alert if error", async () => {
-        render(<ForgotPassword />);
-        const email = screen.getByPlaceholderText("Enter email");
-        const buttonList = screen.getAllByRole("button");
+        const { getByRole } = render(<ForgotPassword />);
+        const saveButton = getByRole("button", { name: "Send" });
 
-        userEvent.type(email, "test");
-        userEvent.click(buttonList[0]);
-        setTimeout(() => {
-            const basic_email_help = screen.getByText("Email is required");
-            expect(basic_email_help).toBeInTheDocument();
-        }, 500);
+        fireEvent.click(saveButton);
+        expect(await screen.findByText("Email is required")).toBeVisible();
     });
     test("should link", async () => {
         render(<ForgotPassword />);
