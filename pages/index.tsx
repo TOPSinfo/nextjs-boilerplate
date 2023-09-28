@@ -1,7 +1,6 @@
 import Login from "../components/Login";
 import React from "react";
 import Head from "next/head";
-import withAuth from "@/helpers/withAuth";
 
 const LoginPage: React.FC = () => {
     return (
@@ -16,4 +15,4 @@ const LoginPage: React.FC = () => {
     );
 };
 
-export default withAuth(LoginPage);
+export default (LoginPage);

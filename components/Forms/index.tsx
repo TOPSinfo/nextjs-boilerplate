@@ -13,9 +13,13 @@ import {
     Typography,
 } from "antd";
 import moment from "moment";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import Image from "next/image";
+
 const { Option } = Select;
 const { TextArea } = Input;
+
 // type of user
 type User = {
     email: string;
@@ -24,7 +28,7 @@ type User = {
     phone: string;
     address: string;
     technology: string[];
-    birth_date: any | string;
+    birth_date: moment.Moment;
     gender: string;
     skills: string[];
     cnfPassword: string;
@@ -49,16 +53,83 @@ const tailFormItemLayout = {
         },
     },
 };
-// submit values
-const handleSubmit = (values: User) => {
-    const data = {
-        ...values,
-        birth_date: values["birth_date"].format("YYYY-MM-DD"),
-    };
-    console.log("values: ", data);
+// layout for the dropzone
+const thumbsContainer = {
+    display: "flex",
+    marginTop: 16,
 };
+
+const thumb = {
+    display: "inline-flex",
+    borderRadius: 2,
+    border: "1px solid #eaeaea",
+    marginBottom: 8,
+    marginRight: 8,
+    width: 100,
+    height: 100,
+    padding: 4,
+};
+
+const thumbInner = {
+    display: "flex",
+    minWidth: 0,
+    overflow: "hidden",
+};
+
+const img = {
+    display: "block",
+    width: "auto",
+    height: "100%",
+};
+
 // example of all type of fields
 const Forms: React.FC = () => {
+    const [files, setFiles] = useState<(File & { preview: string })[]>([]);
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: {
+            "image/*": [],
+        },
+        onDrop: acceptedFiles => {
+            setFiles(
+                acceptedFiles.map(file =>
+                    Object.assign(file, {
+                        preview: URL.createObjectURL(file),
+                    })
+                )
+            );
+        },
+    });
+    // preview of files
+    const thumbs = files.map((file: File & { preview: string }) => (
+        <div style={thumb} key={file.name}>
+            <div style={thumbInner}>
+                <Image
+                    src={file.preview}
+                    style={img}
+                    width={210}
+                    height={120}
+                    alt="drop"
+                    onLoad={() => {
+                        URL.revokeObjectURL(file.preview);
+                    }}
+                />
+            </div>
+        </div>
+    ));
+
+    useEffect(() => {
+        // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
+        return () => files.forEach(file => URL.revokeObjectURL(file.preview));
+    }, [files]);
+
+    // submit values
+    const handleSubmit = useCallback((values: User) => {
+        const data = {
+            ...values,
+            birth_date: values["birth_date"]?.format("YYYY-MM-DD"),
+        };
+        console.log("values: ", data);
+    }, []);
     return (
         <>
             <Layout.Content
@@ -212,7 +283,7 @@ const Forms: React.FC = () => {
                                             </Col>
                                             <Col xs={24}>
                                                 <p className="text-[14px] font-poppins text-left font-[400]">
-                                                   Technology Stack {" "}
+                                                    Technology Stack{" "}
                                                 </p>
                                                 <Form.Item<User> name="technology">
                                                     <Select
@@ -220,13 +291,22 @@ const Forms: React.FC = () => {
                                                         data-testid="select-multiple"
                                                         placeholder="Please select technology"
                                                     >
-                                                        <Option data-testid="val1" value="mern">
+                                                        <Option
+                                                            data-testid="val1"
+                                                            value="mern"
+                                                        >
                                                             MERN STACK
                                                         </Option>
-                                                        <Option data-testid="val2" value="mean">
+                                                        <Option
+                                                            data-testid="val2"
+                                                            value="mean"
+                                                        >
                                                             MEAN STACK
                                                         </Option>
-                                                        <Option data-testid="val3" value="full_stack">
+                                                        <Option
+                                                            data-testid="val3"
+                                                            value="full_stack"
+                                                        >
                                                             FULL STACK
                                                         </Option>
                                                     </Select>
@@ -332,6 +412,34 @@ const Forms: React.FC = () => {
                                                         </Row>
                                                     </Checkbox.Group>
                                                 </Form.Item>
+                                            </Col>
+                                            <Col xs={24}>
+                                                <p className="text-[14px] mb-[10px] mt-[10px] font-poppins text-left font-[400]">
+                                                    Profile Image
+                                                </p>
+
+                                                <section className="container">
+                                                    <div
+                                                        {...getRootProps({
+                                                            className:
+                                                                "dropzone",
+                                                        })}
+                                                    >
+                                                        <input
+                                                            {...getInputProps()}
+                                                        />
+                                                        <p>
+                                                            Drag `n` drop some
+                                                            files here, or click
+                                                            to select files
+                                                        </p>
+                                                    </div>
+                                                    <aside
+                                                        style={thumbsContainer}
+                                                    >
+                                                        {thumbs}
+                                                    </aside>
+                                                </section>
                                             </Col>
                                             <Col xs={24}>
                                                 <p className="text-[14px] mt-[10px] font-poppins text-left font-[400]">
