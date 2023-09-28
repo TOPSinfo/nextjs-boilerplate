@@ -68,14 +68,14 @@ const Signup: React.FC = () => {
         }
     }, [router, signupData]);
 
-    const handleSubmit = (values: User) => {
+    const handleSubmit = (values) => {
         console.log(values, "test@gmail.com");
         // router.push("/");
         // call login request method from action file
         dispatch(signupRequest(values));
     };
     return (
-        <div className="bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto">
+        <div className="bg-[url('/images/background.jpg')] h-screen overflow-y-auto 2xl:pt-0 pt-[180px] flex items-center justify-center my-[0px] mx-auto">
             <Card
                 className="font-poppins my-[20px] w-[100%] max-w-[500px]"
                 bordered={false}
