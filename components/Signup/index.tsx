@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
     Button,
     Card,
@@ -40,8 +40,6 @@ const Signup: React.FC = () => {
     const signupData = useSelector(
         (state: RootState) => state.signupReducer || {}
     );
-    const [signupData, setSignupData] = useState("")
-
     // phone number prefix selector
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>

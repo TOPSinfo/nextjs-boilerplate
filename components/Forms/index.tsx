@@ -320,7 +320,7 @@ const Forms: React.FC = () => {
                                                     <DatePicker
                                                         format="YYYY-MM-DD"
                                                         disabledDate={current => {
-                                                            let customDate =
+                                                            const customDate =
                                                                 moment().format(
                                                                     "YYYY-MM-DD"
                                                                 );

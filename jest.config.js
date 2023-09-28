@@ -1,3 +1,4 @@
+/* eslint-disable */
 const nextJest = require("next/jest");
 const createJestConfig = nextJest({
     dir: "./",
@@ -9,4 +10,3 @@ const customJestConfig = {
     roots: ["<rootDir>", "./"],
 };
 module.exports = createJestConfig(customJestConfig);
-global.IS_REACT_ACT_ENVIRONMENT = true
