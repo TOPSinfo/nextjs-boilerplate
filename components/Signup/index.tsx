@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Button,
     Card,
@@ -40,6 +40,7 @@ const Signup: React.FC = () => {
     const signupData = useSelector(
         (state: RootState) => state.signupReducer || {}
     );
+    const [signupData, setSignupData] = useState("")
 
     // phone number prefix selector
     const prefixSelector = (
@@ -68,7 +69,7 @@ const Signup: React.FC = () => {
         }
     }, [router, signupData]);
 
-    const handleSubmit = (values) => {
+    const handleSubmit = (values: User) => {
         console.log(values, "test@gmail.com");
         // router.push("/");
         // call login request method from action file
