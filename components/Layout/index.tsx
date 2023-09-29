@@ -6,6 +6,7 @@ import AppHeader from "./AppHeader";
 import Sidebar from "./Sidebar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { useSession } from "next-auth/react";
 
 interface LayoutProps {
     title?: string;
@@ -15,11 +16,13 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     const [isAuth, setIsAuth] = useState<boolean | null>(null); // Use boolean for isAuth
     const loginData = useSelector((state: RootState) => state.loginReducer);
+    const { data } = useSession();
+    console.log("data: ", data);
+
     useEffect(() => {
-        const value = localStorage.getItem("isLoggedIn");
         if (loginData.isLoggedIn) {
             setIsAuth(true);
-        } else if (value === null) {
+        } else if (loginData === null) {
             setIsAuth(null);
         } else {
             setIsAuth(false);

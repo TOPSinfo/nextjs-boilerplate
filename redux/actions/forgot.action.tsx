@@ -8,7 +8,7 @@ interface ForgotRequestAction {
 // change type a/c to api success response
 interface ForgotSuccessAction {
     type: typeof FORGOT_SUCCESS;
-    payload: { user: Object };
+    payload: { user: object };
 }
 
 // type of fail action
@@ -32,7 +32,7 @@ export const forgotRequest = (
     },
 });
 
-export const forgotSuccess = (user: Object): ForgotSuccessAction => ({
+export const forgotSuccess = (user: object): ForgotSuccessAction => ({
     type: FORGOT_SUCCESS,
     payload: {
         user,

@@ -33,7 +33,7 @@ interface HideLoaderAction {
 export type AuthActionTypes =
     | LoginRequestAction
     | LoginSuccessAction
-    | LoginFailAction | ShowLoaderAction | HideLoaderAction;
+    | LoginFailAction | ShowLoaderAction | HideLoaderAction | Logout;
 
 export const loginRequest = (
     email: string,

@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Provider } from "react-redux";
-import configureStore from "redux-mock-store";
+
 import AppHeader from "./AppHeader"; // Adjust the import path as needed
 import { logout } from "@/redux/actions/login.action";
 import "@testing-library/jest-dom";
@@ -21,18 +20,8 @@ jest.mock("react-redux", () => ({
 }));
 
 // Create a mock Redux store
-const mockStore = configureStore([]);
-const store = mockStore({});
-
 // Write your test suite
 describe("AppHeader Component", () => {
-    function tree() {
-        return render(
-            <Provider store={store}>
-                <AppHeader />
-            </Provider>
-        );
-    }
     test("renders without errors", () => {
         render(<AppHeader />);
         const headerElement = screen.getByTestId("app-header");

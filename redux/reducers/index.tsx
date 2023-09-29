@@ -8,10 +8,11 @@ import {
     createUserReducer,
     updateUserReducer,
     deleteUserReducer,
-    viewUserReducer
+    viewUserReducer,
 } from "./user.reducers";
+import { AuthActionTypes } from "../actions/login.action";
 
-const rootReducer = combineReducers({
+const appReducers = combineReducers({
     loginReducer,
     signupReducer,
     loaderReducer,
@@ -24,4 +25,11 @@ const rootReducer = combineReducers({
     viewUserReducer,
 });
 
+const rootReducer = (state: undefined, action: AuthActionTypes) => {
+    if (action.type === "LOGOUT") {
+        return appReducers(undefined, action);
+    }
+
+    return appReducers(state, action);
+};
 export default rootReducer;

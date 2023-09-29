@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import ToastHelper from "@/helpers/toast.helper";
 import { ConfigProvider } from "antd";
 import { PersistGate } from "redux-persist/integration/react";
+import AuthProvider from "@/helpers/AuthProvider";
 
 interface CustomAppProps extends Omit<AppProps, "Component"> {
     Component: AppProps["Component"];
@@ -17,6 +18,7 @@ const App = ({ Component, pageProps }: CustomAppProps) => {
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <ToastHelper>
+                    <AuthProvider>
                     <ConfigProvider
                         theme={{
                             token: {
@@ -26,6 +28,7 @@ const App = ({ Component, pageProps }: CustomAppProps) => {
                     >
                         <Component {...pageProps} />
                     </ConfigProvider>
+                    </AuthProvider>
                 </ToastHelper>
             </PersistGate>
         </Provider>
