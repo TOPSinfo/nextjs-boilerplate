@@ -1,7 +1,7 @@
 import { SIGNUP_FAIL, SIGNUP_REQUEST, SIGNUP_SUCCESS } from "../constant";
 import { AuthActionTypes } from "../actions/signup.action";
 export interface AuthState {
-    user: Object | null;
+    user: object | null;
     error: string | null;
 }
 

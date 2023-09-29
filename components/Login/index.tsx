@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { Button, Card, Col, Form, Input, Row, Typography } from "antd";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { useRouter } from "next/router";;
+import { useRouter } from "next/router";
+import { loginRequest } from "@/redux/actions/login.action";
+
 type User = {
     email: string;
     password: string;
@@ -18,9 +20,10 @@ export const validateEmail = (email: string) => {
 };
 const Login: React.FC = () => {
     const router = useRouter();
+    const dispatch = useDispatch();
     const loginData = useSelector((state: RootState) => state.loginReducer);
     useEffect(() => {
-        console.log("isLoggedIn", loginData?.isLoggedIn, loginData?.error);
+        console.log("isLoggedIn", loginData);
         if (loginData?.isLoggedIn) {
             // redirect to dashboard page after login
             router.push("/dashboard");
@@ -29,15 +32,13 @@ const Login: React.FC = () => {
 
     const handleSubmit = (values: { email: string; password: string }) => {
         console.log(values, "test@gmail.com");
-        // after integrating the API remove this code from here & move to saga
-        router.push("/dashboard");
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("user", JSON.stringify(values));
-        // call login request method from action file
-        // dispatch(loginRequest(values.email, values.password));
+        dispatch(loginRequest(values.email, values.password));
     };
     return (
-        <div data-testid="login-component" className=" h-screen bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto">
+        <div
+            data-testid="login-component"
+            className=" h-screen bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto"
+        >
             <Card
                 className="font-poppins w-[100%] max-w-[500px]"
                 bordered={false}

@@ -1,21 +1,23 @@
 // components/Layout.tsx
+import React, { useEffect, useState } from "react";
 import { Affix, Skeleton } from "antd";
 import Head from "next/head";
-import { useEffect, useState } from "react";
 import AppHeader from "./AppHeader";
 import Sidebar from "./Sidebar";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface LayoutProps {
-    title: string;
-    children: React.ReactNode; // Use React.ReactNode for children
+    title?: string;
+    children?: React.ReactNode; // Use React.ReactNode for children
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     const [isAuth, setIsAuth] = useState<boolean | null>(null); // Use boolean for isAuth
-
+    const loginData = useSelector((state: RootState) => state.loginReducer);
     useEffect(() => {
         const value = localStorage.getItem("isLoggedIn");
-        if (value === "true") {
+        if (loginData.isLoggedIn) {
             setIsAuth(true);
         } else if (value === null) {
             setIsAuth(null);

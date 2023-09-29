@@ -13,18 +13,18 @@ type User = {
     email: string;
     password: string;
     username: string;
-    phone: string;
-    gender: string;
-    cnfPassword: string;
-    agreement: boolean;
 };
 // call the signup api here
 export const apiCall = async (user: User) => {
-    const userData = user;
+    const userData = {
+        email: user.email,
+        password: user.password,
+        username: user.username,
+    };
     // add the api URL & parameters
     return await axios
-        .post("/signup", userData)
-        .then(response => response.data)
+        .post("/api/auth/signup", userData)
+        .then(response => response)
         .catch(err => {
             throw err;
         });
@@ -33,22 +33,25 @@ export const apiCall = async (user: User) => {
 // create a signup Request saga
 export function* signupRequestSaga(
     action: ReturnType<typeof signupRequest>
-): any {
+): unknown {
     yield put(showLoader());
     try {
         const response = yield call(apiCall, action.payload.user);
-        const data = yield response.json();
+        console.log("response: ", response);
+
+        // const data = yield response.json();
         if (response.status === 200) {
-            yield put(signupSuccess(data));
+            yield put(signupSuccess(response));
             toast.success("Registration Successfully");
         } else {
-            toast.error(data?.message);
-            yield put(signupFail(data));
+            toast.error(response?.message);
+            yield put(signupFail(response));
         }
-    } catch (err: any) {
-        console.log("Error");
-        toast.error(err.message);
-        yield put(signupFail(err.message));
+    } catch (err: unknown) {
+        console.log("Error", err);
+        const error = err as { response: { data: { error: string } } };
+        toast.error(error.response.data.error);
+        yield put(signupFail(error.response.data.error));
     } finally {
         yield put(hideLoader());
     }

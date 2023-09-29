@@ -14,7 +14,7 @@ interface LoginRequestAction {
 
 interface LoginSuccessAction {
     type: typeof LOGIN_SUCCESS;
-    payload: { user: Object };
+    payload: { user: object };
 }
 
 interface LoginFailAction {
@@ -46,7 +46,7 @@ export const loginRequest = (
     },
 });
 
-export const loginSuccess = (user: Object): LoginSuccessAction => ({
+export const loginSuccess = (user: object): LoginSuccessAction => ({
     type: LOGIN_SUCCESS,
     payload: {
         user,

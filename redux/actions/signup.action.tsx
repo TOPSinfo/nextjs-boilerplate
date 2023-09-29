@@ -7,10 +7,6 @@ type User = {
     email: string;
     password: string;
     username: string;
-    phone: string;
-    gender: string;
-    cnfPassword: string;
-    agreement: boolean;
 };
 
 interface SignupRequest {
@@ -20,7 +16,7 @@ interface SignupRequest {
 
 interface SignupSuccessAction {
     type: typeof SIGNUP_SUCCESS;
-    payload: { user: Object };
+    payload: { user: object };
 }
 
 interface SignupFailAction {
@@ -40,7 +36,7 @@ export const signupRequest = (user: User): SignupRequest => ({
     },
 });
 
-export const signupSuccess = (user: Object): SignupSuccessAction => ({
+export const signupSuccess = (user: object): SignupSuccessAction => ({
     type: SIGNUP_SUCCESS,
     payload: {
         user,

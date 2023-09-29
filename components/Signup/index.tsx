@@ -6,9 +6,7 @@ import {
     Col,
     Form,
     Input,
-    Radio,
     Row,
-    Select,
     Typography,
 } from "antd";
 import Link from "next/link";
@@ -16,15 +14,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useRouter } from "next/router";
 import { signupRequest } from "@/redux/actions/signup.action";
-const { Option } = Select;
 type User = {
     email: string;
     password: string;
     username: string;
-    phone: string;
-    gender: string;
     cnfPassword: string;
-    agreement: boolean;
 };
 // for validation purposes in test cases
 export const validateEmail = (email: string) => {
@@ -41,14 +35,6 @@ const Signup: React.FC = () => {
         (state: RootState) => state.signupReducer || {}
     );
     // phone number prefix selector
-    const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-            <Select style={{ width: 70 }}>
-                <Option value="91">+91</Option>
-                <Option value="1">+1</Option>
-            </Select>
-        </Form.Item>
-    );
 
     // Form Item layout for the agreement checkbox
     const tailFormItemLayout = {
@@ -69,8 +55,6 @@ const Signup: React.FC = () => {
 
     const handleSubmit = (values: User) => {
         console.log(values, "test@gmail.com");
-        // router.push("/");
-        // call login request method from action file
         dispatch(signupRequest(values));
     };
     return (
@@ -137,46 +121,6 @@ const Signup: React.FC = () => {
                                     <Input placeholder="Enter Email" />
                                 </Form.Item>
                             </Col>
-                            <Col xs={24}>
-                                <p className="text-[14px] font-poppins text-left font-[400]">
-                                    Phone Number{" "}
-                                    <span className="text-red-600">*</span>
-                                </p>
-                                <Form.Item<User>
-                                    name="phone"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: "Phone number is required",
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        addonBefore={prefixSelector}
-                                        placeholder="Enter Phone Number"
-                                    />
-                                </Form.Item>
-                            </Col>
-                            <Col xs={24}>
-                                <p className="text-[14px] font-poppins text-left font-[400]">
-                                    Gender{" "}
-                                    <span className="text-red-600">*</span>
-                                </p>
-                                <Form.Item<User>
-                                    name="gender"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: "Gender is required",
-                                        },
-                                    ]}
-                                >
-                                    <Radio.Group>
-                                        <Radio value="female"> Female </Radio>
-                                        <Radio value="male"> Male </Radio>
-                                    </Radio.Group>
-                                </Form.Item>
-                            </Col>
 
                             <Col xs={24}>
                                 <p className="text-[14px] mt-[10px] font-poppins text-left font-[400]">
@@ -196,9 +140,7 @@ const Signup: React.FC = () => {
                                                 "Password must have a minimum length of 8",
                                         },
                                         {
-                                            pattern: new RegExp(
-                                                "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
-                                            ),
+                                            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                                             message:
                                                 "Password must contain at least one lowercase letter, uppercase letter, number, and special character",
                                         },

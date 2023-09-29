@@ -8,7 +8,7 @@ import {
 import { AuthActionTypes } from "../actions/login.action";
 export interface AuthState {
     isLoggedIn: boolean;
-    user: Object | null;
+    user: object | null;
     error: string | null;
 }
 

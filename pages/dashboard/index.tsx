@@ -1,7 +1,6 @@
 import Dashboard from "@/components/Dashboard";
 import Layout from "@/components/Layout";
 import React from "react";
-import withAuth from "@/helpers/withAuth";
 
 const DashboardPage: React.FC = () => {
     return (
@@ -11,4 +10,4 @@ const DashboardPage: React.FC = () => {
     );
 };
 
-export default withAuth(DashboardPage);
+export default (DashboardPage);
