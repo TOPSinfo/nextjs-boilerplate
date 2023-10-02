@@ -19,7 +19,7 @@ export const apiCall = async (password: string, cnfPassword: string) => {
 // create a forgot Request saga
 export function* resetRequestSaga(
     action: ReturnType<typeof resetRequest>
-): any {
+): unknown {
     try {
         yield put(showLoader());
         const response = yield call(
@@ -36,10 +36,11 @@ export function* resetRequestSaga(
             toast.error(data?.message);
             yield put(resetFail(data));
         }
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.log("Error");
-        toast.error(err.message);
-        yield put(resetFail(err.message));
+        const error = err as { message: string };
+        toast.error(error.message);
+        yield put(resetFail(error.message));
     } finally {
         yield put(hideLoader());
     }

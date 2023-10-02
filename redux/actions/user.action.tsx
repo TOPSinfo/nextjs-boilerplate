@@ -30,6 +30,8 @@ type CreateUser = {
     phone: string;
     age?: number;
     image: string;
+    lastname: string;
+    gender: string;
 };
 type UpdateUser = {
     id: number;

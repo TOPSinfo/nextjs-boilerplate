@@ -1,6 +1,5 @@
 import Layout from "@/components/Layout";
 import React from "react";
-import withAuth from "@/helpers/withAuth";
 import ViewUsers from "@/components/Users/ViewUsers";
 
 const ViewUsersPage: React.FC = () => {
@@ -11,4 +10,4 @@ const ViewUsersPage: React.FC = () => {
     );
 };
 
-export default withAuth(ViewUsersPage);
+export default ViewUsersPage;

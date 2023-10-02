@@ -3,10 +3,12 @@ import UserModel from "@/models/User.model";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import Credentials from "next-auth/providers/credentials";
+import { signJwtAccessToken } from "./jwt";
 
 export const nextauth: NextAuthOptions = {
     session: {
         strategy: "jwt",
+        maxAge: 3600,
     },
     providers: [
         Credentials({
@@ -30,40 +32,35 @@ export const nextauth: NextAuthOptions = {
                     password
                 );
                 if (!passwordMatch) throw Error("password mismatch");
-
-                return {
+                const user = {
                     id: existingUser._id,
                     username: existingUser.username,
                     email: existingUser.email,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                } as any;
+                };
+                const accessToken = signJwtAccessToken(user);
+                const result = { ...user, accessToken };
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                return result as any;
             },
         }),
     ],
     callbacks: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        jwt(params: any) {
-            if (params?.user) {
-                params.token = params?.user;
-            }
-            console.log("parameters",params);
-            return params.token;
+        async jwt({ token, user }) {
+            return { ...token, ...user };
         },
-        session({ session, token }) {
-            if (session?.user) {
-                (session.user as { id: string }).id = token.id as string;
-            }
+
+        async session({ session, token }) {
+            session.user = token;
             return session;
         },
+    },
+    pages: {
+        signIn: "/",
     },
     secret: process.env.NEXTAUTH_SECRET,
 };
 
-export const authHandler = NextAuth(nextauth);
+export const handler = NextAuth(nextauth);
 
-export {
-    authHandler as GET,
-    authHandler as POST,
-    authHandler as PUT,
-    authHandler as DELETE,
-};
+export { handler as GET, handler as POST, handler as PUT, handler as DELETE };

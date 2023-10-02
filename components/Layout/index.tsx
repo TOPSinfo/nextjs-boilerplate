@@ -16,9 +16,15 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     const [isAuth, setIsAuth] = useState<boolean | null>(null); // Use boolean for isAuth
     const loginData = useSelector((state: RootState) => state.loginReducer);
-    const { data } = useSession();
-    console.log("data: ", data);
-
+    const { data: session } = useSession();
+    useEffect(() => {
+        if (session && (session?.user as { accessToken: string }).accessToken) {
+            localStorage.setItem(
+                "token",
+                (session?.user as { accessToken: string }).accessToken
+            );
+        }
+    }, [session]);
     useEffect(() => {
         if (loginData.isLoggedIn) {
             setIsAuth(true);

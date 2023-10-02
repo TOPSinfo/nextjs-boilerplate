@@ -60,8 +60,7 @@ export function* watchLoginRequest() {
 
 export function* logoutSaga(action: ReturnType<typeof logout>) {
     yield action;
-    signOut();
-    window.location.href = "/";
+    signOut({ callbackUrl: "/" });
 }
 
 export function* watchLogout() {

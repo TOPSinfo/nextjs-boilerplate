@@ -33,9 +33,9 @@ import swal from "sweetalert";
 import { useRouter } from "next/router";
 
 interface UserListProps {
-    fetchUsers?: () => Promise<any[]>; // Define the prop type
+    fetchUsers?: () => Promise<unknown[]>; // Define the prop type
 }
-type User = {};
+type User = object;
 type UserModalState = {
     id: string;
     firstName: string;
@@ -56,7 +56,7 @@ const Users: React.FC<UserListProps> = () => {
     const [open, setOpen] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [id, setID] = useState<string>("");
-    const [editUser, setEditUser] = useState<UserModalState | {}>({});
+    const [editUser, setEditUser] = useState<UserModalState | object>({});
 
     // open the edit modal
     const handleEdit = () => {
@@ -134,19 +134,21 @@ const Users: React.FC<UserListProps> = () => {
         {
             title: "Profile",
             key: "image",
-            render: user => (
-                <Avatar size={50} src={user.image} className="" />
-            ),
+            render: user => <Avatar size={50} src={user.image} className="" />,
         },
         {
             title: "Name",
-            dataIndex: "firstName",
             key: "firstName",
+            render: user => (
+                <Typography>
+                    {user.firstName} {user.lastname}
+                </Typography>
+            ),
         },
         {
-            title: "Age",
-            dataIndex: "age",
-            key: "age",
+            title: "Gender",
+            dataIndex: "gender",
+            key: "gender",
         },
         {
             title: "Phone Number",
@@ -162,7 +164,7 @@ const Users: React.FC<UserListProps> = () => {
         {
             title: "Action",
             key: "action",
-            render: (_, record: any) => (
+            render: (_, record: object) => (
                 <Dropdown
                     align={{ offset: [-90, -80] }}
                     menu={{ items }}
@@ -172,7 +174,7 @@ const Users: React.FC<UserListProps> = () => {
                         <MoreOutlined
                             onClick={() => {
                                 setEditUser(record);
-                                setID(record.id);
+                                setID((record as { id: string }).id);
                             }}
                             className="text-[24px] cursor-pointer"
                         />
@@ -185,7 +187,7 @@ const Users: React.FC<UserListProps> = () => {
     return (
         <Layout.Content
             data-testid="users-component" /* add test id for test cases */
-            className="bg-[#F0F2F5] pl-[200px] overflow-hidden"
+            className="bg-[#F0F2F5] pl-[80px] min-[992px]:pl-[200px] overflow-hidden"
         >
             <div className="bg-[#F0F2F5]">
                 <>
@@ -211,18 +213,18 @@ const Users: React.FC<UserListProps> = () => {
                     {isLoading && <Loader />}
                     <Row>
                         <Col className="px-[15px] py-[15px]" span={24}>
-                            {users.length > 0 && (
+                            {users?.length > 0 && (
                                 <>
                                     <Table
                                         columns={columns}
                                         pagination={false}
                                         dataSource={users}
-                                        rowKey={"id"}
+                                        rowKey={"_id"}
                                     />
                                 </>
                             )}{" "}
                             {/* add pagination for all users */}
-                            {userData && (
+                            {users?.length > 0 && (
                                 <Pagination
                                     className="text-right mt-[20px]"
                                     pageSize={userData?.limit}
@@ -231,7 +233,7 @@ const Users: React.FC<UserListProps> = () => {
                                     // add onchange for the get all data a/c to pagination
                                 />
                             )}
-                            {users.length === 0 && (
+                            {users?.length === 0 && (
                                 <div className="text-center">
                                     <Result
                                         status="404"

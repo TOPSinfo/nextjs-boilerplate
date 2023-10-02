@@ -31,12 +31,13 @@ type User = {
     limit: number;
     skip: number;
 };
+
 type CreateUser = {
     firstName: string;
     email: string;
     phone: string;
-    age?: number;
-    image: string;
+    lastname: string;
+    gender: string;
 };
 type UserState = {
     user: CreateUser;
@@ -47,13 +48,17 @@ type EditUser = {
     phone: string;
     age?: number;
     id: number;
-    image: string;
 };
 // Replace with your API call function to fetch user data
 const fetchUserData = async (): Promise<User> => {
     // Example API call
+    const accessToken = localStorage.getItem("token");
+    const headers = {
+        headers: { Authorization: `${accessToken}` },
+    };
+
     return await axios
-        .get("https://dummyjson.com/users")
+        .get("/api/users", headers)
         .then(response => response.data)
         .catch(err => {
             throw err;
@@ -61,13 +66,16 @@ const fetchUserData = async (): Promise<User> => {
 };
 
 // Saga worker function
-export function* fetchUsers(): any {
+export function* fetchUsers(): unknown {
     yield put(showLoader());
     try {
         const users = yield call(fetchUserData);
+
         yield put(fetchUsersSuccess(users));
-    } catch (error: any) {
-        yield put(fetchUsersFailure(error?.message));
+    } catch (err: unknown) {
+        const error = err as { response: { data: { message: string } } };
+        toast.error(error?.response.data.message);
+        yield put(fetchUsersFailure(error?.response.data.message));
     } finally {
         yield put(hideLoader());
     }
@@ -78,27 +86,34 @@ const createUser = async (user: CreateUser): Promise<UserState> => {
         email: user.email,
         firstName: user.firstName,
         phone: user.phone,
-        age: user.age,
-        image: user.image,
+        lastname: user.lastname,
+        gender: user.gender,
+    };
+    const accessToken = localStorage.getItem("token");
+    const headers = {
+        headers: { Authorization: `${accessToken}` },
     };
     return await axios
-        .post("https://dummyjson.com/users/add", userData)
+        .post("api/users", userData, headers)
         .then(response => response.data)
         .catch(err => {
             throw err;
         });
 };
 
-function* createUserSaga(action: ReturnType<typeof createUserRequest>): any {
+function* createUserSaga(
+    action: ReturnType<typeof createUserRequest>
+): unknown {
     yield put(showLoader());
     try {
         const user = yield call(createUser, action.payload.user);
         yield put(createUserSuccess(user));
         toast.success("User created successfully");
         yield put(fetchUsersRequest());
-    } catch (error: any) {
-        toast.error(error);
-        yield put(createUserFailure(error));
+    } catch (err: unknown) {
+        const error = err as { response: { data: { _message: string } } };
+        toast.error(error?.response.data._message);
+        yield put(createUserFailure(error?.response.data._message));
     } finally {
         yield put(hideLoader());
     }
@@ -110,7 +125,6 @@ const updateUser = async (user: EditUser): Promise<UserState> => {
         firstName: user.firstName,
         phone: user.phone,
         age: user.age,
-        image: user.image,
     };
     return await axios
         .put(`https://dummyjson.com/users/${user.id}`, userData)
@@ -119,16 +133,19 @@ const updateUser = async (user: EditUser): Promise<UserState> => {
             throw err;
         });
 };
-function* updateUserSaga(action: ReturnType<typeof updateUserRequest>): any {
+function* updateUserSaga(
+    action: ReturnType<typeof updateUserRequest>
+): unknown {
     yield put(showLoader());
     try {
         const user = yield call(updateUser, action.payload.user);
         yield put(updateUserSuccess(user));
         toast.success("User updated successfully");
         yield put(fetchUsersRequest());
-    } catch (error: any) {
-        toast.error(error);
-        yield put(updateUserFailure(error));
+    } catch (err: unknown) {
+        const error = err as { message: string };
+        toast.error(error?.message);
+        yield put(updateUserFailure(error?.message));
     } finally {
         yield put(hideLoader());
     }
@@ -143,16 +160,19 @@ const deleteUser = async (id: string): Promise<UserState> => {
             throw err;
         });
 };
-function* deleteUserSaga(action: ReturnType<typeof deleteUserRequest>): any {
+function* deleteUserSaga(
+    action: ReturnType<typeof deleteUserRequest>
+): unknown {
     yield put(showLoader());
     try {
         yield call(deleteUser, action.payload.id);
         yield put(deleteUserSuccess());
         toast.success("User deleted successfully");
         yield put(fetchUsersRequest());
-    } catch (error: any) {
-        toast.error(error);
-        yield put(deleteUserFailure(error));
+    } catch (err: unknown) {
+        const error = err as { message: string };
+        toast.error(error?.message);
+        yield put(deleteUserFailure(error?.message));
     } finally {
         yield put(hideLoader());
     }
@@ -167,14 +187,17 @@ const userDetails = async (id: string | undefined): Promise<UserState> => {
             throw err;
         });
 };
-function* UserDetailSaga(action: ReturnType<typeof deleteUserRequest>): any {
+function* UserDetailSaga(
+    action: ReturnType<typeof deleteUserRequest>
+): unknown {
     yield put(showLoader());
     try {
         const user = yield call(userDetails, action.payload.id);
         yield put(viewUserSuccess(user));
-    } catch (error: any) {
-        toast.error(error);
-        yield put(viewUserFailure(error));
+    } catch (err: unknown) {
+        const error = err as { message: string };
+        toast.error(error?.message);
+        yield put(viewUserFailure(error?.message));
     } finally {
         yield put(hideLoader());
     }
