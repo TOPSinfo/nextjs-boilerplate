@@ -1,3 +1,4 @@
+import React from "react";
 import ResetPassword from "./index";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -16,7 +17,6 @@ jest.mock("react-toastify", () => ({
 jest.mock("../../redux/sagas/reset.saga", () => ({
     apiCall: jest.fn(),
 }));
-const onSubmit = jest.fn();
 
 describe("Test the Reset Password Component", () => {
     test("render the reset form on the screen", async () => {

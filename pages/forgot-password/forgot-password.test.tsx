@@ -1,3 +1,4 @@
+import React from "react";
 import { render } from "@testing-library/react";
 import ForgotPasswordPage from "@/pages/forgot-password"; // Adjust the import path as needed
 import "@testing-library/jest-dom";

@@ -1,3 +1,4 @@
+import React from "react";
 import ForgotPassword, { validateEmail } from "./index";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -16,7 +17,6 @@ jest.mock("react-toastify", () => ({
 jest.mock("../../redux/sagas/forgot.saga", () => ({
     apiCall: jest.fn(),
 }));
-const onSubmit = jest.fn();
 
 describe("Test the ForgotPassword Component", () => {
     test("render the forgot form on the screen", async () => {
@@ -33,7 +33,7 @@ describe("Test the ForgotPassword Component", () => {
 
     test("email input field should accept email ", () => {
         render(<ForgotPassword />);
-        const email: any = screen.getByPlaceholderText("Enter email");
+        const email: HTMLInputElement = screen.getByPlaceholderText("Enter email");
         userEvent.type(email, "test");
         expect(email.value).not.toMatch("test.malvia@gmail.com");
     });

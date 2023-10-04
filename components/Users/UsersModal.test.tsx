@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, act, screen } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import UserModal from "./UserModal"; // Import your UserModal component
 import "@testing-library/jest-dom";
 import "../../mockMatchMedia";

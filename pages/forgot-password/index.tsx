@@ -1,6 +1,6 @@
+import React from "react";
 import ForgotPassword from "@/components/ForgotPassword/index";
 import Head from "next/head";
-import React from "react";
 
 const ForgotPasswordPage: React.FC = () => {
     return (

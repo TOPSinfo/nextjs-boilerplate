@@ -1,3 +1,4 @@
+import React from "react";
 import Login, { validateEmail } from "./index";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -37,7 +38,7 @@ describe("Test the Login Component", () => {
 
     test("email input field should accept email ", () => {
         render(<Login />);
-        const email: any = screen.getByPlaceholderText("Enter email");
+        const email: HTMLInputElement = screen.getByPlaceholderText("Enter email");
         userEvent.type(email, "test");
         expect(email.value).not.toMatch("test.malvia@gmail.com");
     });

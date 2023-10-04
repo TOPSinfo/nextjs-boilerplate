@@ -16,6 +16,7 @@ jest.mock("react-redux", () => ({
 }));
 
 let store = mockStore({});
+console.log(store);
 describe("Users Component", () => {
     beforeEach(() => {
         // Mock Redux store state
