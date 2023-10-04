@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import {
     signupFail,
     signupRequest,
@@ -48,10 +48,13 @@ export function* signupRequestSaga(
             yield put(signupFail(response));
         }
     } catch (err: unknown) {
-        console.log("Error", err);
-        const error = err as { response: { data: { error: string } } };
-        toast.error(error.response.data.error);
-        yield put(signupFail(error.response.data.error));
+        if (err instanceof AxiosError) {
+            // Now TypeScript recognizes err as AxiosError, and you can access err.response
+            if (err?.response) {
+                toast.error(err?.response.data.error);
+                yield put(signupFail(err?.response.data.error));
+            }
+        }
     } finally {
         yield put(hideLoader());
     }

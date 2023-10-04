@@ -39,7 +39,7 @@ const Dashboard: React.FC = () => {
         ],
     };
     return (
-        <Layout.Content className="bg-[#F0F2F5]  pl-[200px] overflow-hidden overflow-hidden">
+        <Layout.Content className="bg-[#F0F2F5]  pl-[80px] min-[992px]:pl-[200px] overflow-hidden overflow-hidden">
             <div className="bg-[#F0F2F5]">
                 <>
                     <Row>

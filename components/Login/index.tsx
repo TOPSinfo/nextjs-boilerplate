@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { Button, Card, Col, Form, Input, Row, Typography } from "antd";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { loginRequest } from "@/redux/actions/login.action";
+import { useSession } from "next-auth/react";
+import { initializeAuthenticatedAxios } from "@/helpers/axios";
+import { useRefreshToken } from "@/libs/hooks/useRefreshtoken";
 
 type User = {
     email: string;
@@ -21,14 +23,29 @@ export const validateEmail = (email: string) => {
 const Login: React.FC = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const loginData = useSelector((state: RootState) => state.loginReducer);
+    const { data: session } = useSession();
+    const refreshToken = useRefreshToken();
+    // Initialize authenticatedAxios with session and refreshToken
+
     useEffect(() => {
-        console.log("isLoggedIn", loginData);
-        if (loginData?.isLoggedIn) {
+        if (session?.user?.accessToken) {
+            const user = {
+                id: session.user.id,
+                email: session.user.email,
+                username: session.user.username,
+            };
+            localStorage.setItem("token", session?.user?.accessToken);
+            localStorage.setItem("refreshToken", session?.user?.refreshToken);
+            localStorage.setItem("user", JSON.stringify(user));
+        }
+    }, [session]);
+    useEffect(() => {
+        if (session?.user) {
+            initializeAuthenticatedAxios(session, refreshToken);
             // redirect to dashboard page after login
             router.push("/dashboard");
         }
-    }, [loginData, router]);
+    }, [session, router]);
 
     const handleSubmit = (values: { email: string; password: string }) => {
         console.log(values, "test@gmail.com");

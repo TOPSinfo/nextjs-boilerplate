@@ -134,7 +134,7 @@ const Forms: React.FC = () => {
         <>
             <Layout.Content
                 data-testid="forms-component"
-                className="bg-[#F0F2F5] pl-[200px] overflow-hidden"
+                className="bg-[#F0F2F5] pl-[80px] min-[992px]:pl-[200px] overflow-hidden"
             >
                 <div className="bg-[#F0F2F5]">
                     <>

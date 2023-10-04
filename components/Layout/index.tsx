@@ -7,6 +7,8 @@ import Sidebar from "./Sidebar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useSession } from "next-auth/react";
+import { initializeAuthenticatedAxios } from "@/helpers/axios";
+import { useRefreshToken } from "@/libs/hooks/useRefreshtoken";
 
 interface LayoutProps {
     title?: string;
@@ -17,14 +19,16 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     const [isAuth, setIsAuth] = useState<boolean | null>(null); // Use boolean for isAuth
     const loginData = useSelector((state: RootState) => state.loginReducer);
     const { data: session } = useSession();
+
+    const refreshToken = useRefreshToken();
+
     useEffect(() => {
-        if (session && (session?.user as { accessToken: string }).accessToken) {
-            localStorage.setItem(
-                "token",
-                (session?.user as { accessToken: string }).accessToken
-            );
+        if (session?.user) {
+            console.log("Session", session);
+            initializeAuthenticatedAxios(session, refreshToken);
         }
-    }, [session]);
+    }, [session?.user]);
+
     useEffect(() => {
         if (loginData.isLoggedIn) {
             setIsAuth(true);

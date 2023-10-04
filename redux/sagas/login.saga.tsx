@@ -11,6 +11,7 @@ import {
 import { LOGIN_REQUEST, LOGOUT } from "../constant";
 import { toast } from "react-toastify";
 import { signIn, signOut } from "next-auth/react";
+import { AxiosError } from "axios";
 
 // create a login Request saga
 export function* loginRequestSaga(
@@ -44,10 +45,13 @@ export function* loginRequestSaga(
             toast.error(response?.error);
         }
     } catch (err: unknown) {
-        console.log("Error", err);
-        const error = err as { message: string };
-        toast.error(error?.message);
-        yield put(loginFail(error?.message));
+        if (err instanceof AxiosError) {
+            // Now TypeScript recognizes err as AxiosError, and you can access err.response
+            if (err.message) {
+                toast.error(err?.message);
+                yield put(loginFail(err?.message));
+            }
+        }
     } finally {
         yield put(hideLoader());
     }

@@ -22,9 +22,10 @@ import {
     USERS_LIST_REQUEST,
     VIEW_USER_REQUEST,
 } from "../constant";
-import axios from "axios";
+import axios from "@/helpers/axios";
 import { hideLoader, showLoader } from "../actions/login.action";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 type User = {
     users: [];
     total: number;
@@ -69,13 +70,17 @@ const fetchUserData = async (): Promise<User> => {
 export function* fetchUsers(): unknown {
     yield put(showLoader());
     try {
-        const users = yield call(fetchUserData);
+        const users = yield fetchUserData();
 
         yield put(fetchUsersSuccess(users));
     } catch (err: unknown) {
-        const error = err as { response: { data: { message: string } } };
-        toast.error(error?.response.data.message);
-        yield put(fetchUsersFailure(error?.response.data.message));
+        if (err instanceof AxiosError) {
+            // Now TypeScript recognizes err as AxiosError, and you can access err.response
+            if (err.response) {
+                toast.error(err?.response?.data?.message);
+                yield put(fetchUsersFailure(err?.response?.data?.message));
+            }
+        }
     } finally {
         yield put(hideLoader());
     }
@@ -111,9 +116,13 @@ function* createUserSaga(
         toast.success("User created successfully");
         yield put(fetchUsersRequest());
     } catch (err: unknown) {
-        const error = err as { response: { data: { _message: string } } };
-        toast.error(error?.response.data._message);
-        yield put(createUserFailure(error?.response.data._message));
+        if (err instanceof AxiosError) {
+            // Now TypeScript recognizes err as AxiosError, and you can access err.response
+            if (err.response) {
+                toast.error(err?.response?.data._message);
+                yield put(createUserFailure(err?.response?.data?._message));
+            }
+        }
     } finally {
         yield put(hideLoader());
     }
@@ -143,9 +152,13 @@ function* updateUserSaga(
         toast.success("User updated successfully");
         yield put(fetchUsersRequest());
     } catch (err: unknown) {
-        const error = err as { message: string };
-        toast.error(error?.message);
-        yield put(updateUserFailure(error?.message));
+        if (err instanceof AxiosError) {
+            // Now TypeScript recognizes err as AxiosError, and you can access err.response
+            if (err.response) {
+                toast.error(err?.message);
+                yield put(updateUserFailure(err?.message));
+            }
+        }
     } finally {
         yield put(hideLoader());
     }
@@ -170,9 +183,13 @@ function* deleteUserSaga(
         toast.success("User deleted successfully");
         yield put(fetchUsersRequest());
     } catch (err: unknown) {
-        const error = err as { message: string };
-        toast.error(error?.message);
-        yield put(deleteUserFailure(error?.message));
+        if (err instanceof AxiosError) {
+            // Now TypeScript recognizes err as AxiosError, and you can access err.response
+            if (err.response) {
+                toast.error(err?.message);
+                yield put(deleteUserFailure(err?.message));
+            }
+        }
     } finally {
         yield put(hideLoader());
     }
@@ -181,7 +198,7 @@ function* deleteUserSaga(
 
 const userDetails = async (id: string | undefined): Promise<UserState> => {
     return await axios
-        .get(`https://dummyjson.com/users/${id}`)
+        .get(`api/users/${id}`)
         .then(response => response.data)
         .catch(err => {
             throw err;
@@ -195,25 +212,25 @@ function* UserDetailSaga(
         const user = yield call(userDetails, action.payload.id);
         yield put(viewUserSuccess(user));
     } catch (err: unknown) {
-        const error = err as { message: string };
-        toast.error(error?.message);
-        yield put(viewUserFailure(error?.message));
+        if (err instanceof AxiosError) {
+            // Now TypeScript recognizes err as AxiosError, and you can access err.response
+            if (err.response) {
+                toast.error(err?.message);
+                yield put(viewUserFailure(err?.message));
+            }
+        }
     } finally {
         yield put(hideLoader());
     }
 }
 
 // Saga watcher function
-export function* userSaga() {
+function* userSaga() {
     yield takeEvery(USERS_LIST_REQUEST, fetchUsers);
-}
-
-export function* createUsersSaga() {
-    yield takeEvery(CREATE_USER_REQUEST, createUserSaga);
-}
-
-export function* updateUsers() {
     yield takeEvery(UPDATE_USER_REQUEST, updateUserSaga);
     yield takeEvery(DELETE_USER_REQUEST, deleteUserSaga);
     yield takeEvery(VIEW_USER_REQUEST, UserDetailSaga);
+    yield takeEvery(CREATE_USER_REQUEST, createUserSaga);
 }
+
+export default userSaga;

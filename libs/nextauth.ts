@@ -38,20 +38,19 @@ export const nextauth: NextAuthOptions = {
                     email: existingUser.email,
                 };
                 const accessToken = signJwtAccessToken(user);
-                const result = { ...user, accessToken };
+                const result = { ...user, ...accessToken };
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 return result as any;
             },
         }),
     ],
     callbacks: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         async jwt({ token, user }) {
             return { ...token, ...user };
         },
 
         async session({ session, token }) {
-            session.user = token;
+            session.user = token as never;
             return session;
         },
     },

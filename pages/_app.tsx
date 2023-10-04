@@ -19,15 +19,15 @@ const App = ({ Component, pageProps }: CustomAppProps) => {
             <PersistGate loading={null} persistor={persistor}>
                 <ToastHelper>
                     <AuthProvider>
-                    <ConfigProvider
-                        theme={{
-                            token: {
-                                fontFamily: "Poppins",
-                            },
-                        }}
-                    >
-                        <Component {...pageProps} />
-                    </ConfigProvider>
+                        <ConfigProvider
+                            theme={{
+                                token: {
+                                    fontFamily: "Poppins",
+                                },
+                            }}
+                        >
+                            <Component {...pageProps} />
+                        </ConfigProvider>
                     </AuthProvider>
                 </ToastHelper>
             </PersistGate>

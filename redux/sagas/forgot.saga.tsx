@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { FORGOT_REQUEST } from "../constant";
 import { toast } from "react-toastify";
 import {
@@ -23,7 +23,7 @@ export const apiCall = async (email: string) => {
 // create a forgot Request saga
 export function* forgotRequestSaga(
     action: ReturnType<typeof forgotRequest>
-): any {
+): unknown {
     yield put(showLoader());
     try {
         const response = yield call(apiCall, action.payload.email);
@@ -36,10 +36,14 @@ export function* forgotRequestSaga(
             toast.error(data?.message);
             yield put(forgotFail(data));
         }
-    } catch (err: any) {
-        console.log("Error");
-        toast.error(err.message);
-        yield put(forgotFail(err.message));
+    } catch (err: unknown) {
+        if (err instanceof AxiosError) {
+            // Now TypeScript recognizes err as AxiosError, and you can access err.response
+            if (err.response) {
+                toast.error(err?.response?.data?.message);
+                yield put(forgotFail(err?.response?.data?.message));
+            }
+        }
     } finally {
         yield put(hideLoader());
     }
