@@ -40,13 +40,14 @@ const initialState: UserState = {
 };
 type ViewUser = {
     firstName: string;
-    lastName: string;
+    lastname: string;
     email: string;
-    age: number;
+    gender: string;
     phone: string;
+    _id: string;
 };
 export interface AddUser {
-    user: Object | null | undefined;
+    user: object | null | undefined;
     error: string | null;
 }
 

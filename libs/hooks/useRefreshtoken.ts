@@ -11,7 +11,7 @@ export const useRefreshToken = () => {
         id: session?.user.id,
     };
     const refreshToken = async () => {
-        const res = await axios.post("api/auth/refresh", {
+        const res = await axios.post("/api/auth/refresh", {
             refresh: session?.user?.refreshToken,
             user: user,
         });

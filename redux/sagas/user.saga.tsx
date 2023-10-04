@@ -14,6 +14,7 @@ import {
     deleteUserFailure,
     viewUserSuccess,
     viewUserFailure,
+    viewUsersRequest,
 } from "../actions/user.action";
 import {
     CREATE_USER_REQUEST,
@@ -47,8 +48,9 @@ type EditUser = {
     firstName: string;
     email: string;
     phone: string;
-    age?: number;
-    id: number;
+    lastname: string;
+    gender: string;
+    id: string;
 };
 // Replace with your API call function to fetch user data
 const fetchUserData = async (): Promise<User> => {
@@ -94,12 +96,9 @@ const createUser = async (user: CreateUser): Promise<UserState> => {
         lastname: user.lastname,
         gender: user.gender,
     };
-    const accessToken = localStorage.getItem("token");
-    const headers = {
-        headers: { Authorization: `${accessToken}` },
-    };
+
     return await axios
-        .post("api/users", userData, headers)
+        .post("/api/users", userData)
         .then(response => response.data)
         .catch(err => {
             throw err;
@@ -114,7 +113,7 @@ function* createUserSaga(
         const user = yield call(createUser, action.payload.user);
         yield put(createUserSuccess(user));
         toast.success("User created successfully");
-        yield put(fetchUsersRequest());
+        // window.location.href = '/users'
     } catch (err: unknown) {
         if (err instanceof AxiosError) {
             // Now TypeScript recognizes err as AxiosError, and you can access err.response
@@ -133,10 +132,11 @@ const updateUser = async (user: EditUser): Promise<UserState> => {
         email: user.email,
         firstName: user.firstName,
         phone: user.phone,
-        age: user.age,
+        lastname: user.lastname,
+        gender: user.gender,
     };
     return await axios
-        .put(`https://dummyjson.com/users/${user.id}`, userData)
+        .put(`/api/users/${user.id}`, userData)
         .then(response => response.data)
         .catch(err => {
             throw err;
@@ -150,7 +150,7 @@ function* updateUserSaga(
         const user = yield call(updateUser, action.payload.user);
         yield put(updateUserSuccess(user));
         toast.success("User updated successfully");
-        yield put(fetchUsersRequest());
+        window.location.href = "/users";
     } catch (err: unknown) {
         if (err instanceof AxiosError) {
             // Now TypeScript recognizes err as AxiosError, and you can access err.response
@@ -167,7 +167,7 @@ function* updateUserSaga(
 
 const deleteUser = async (id: string): Promise<UserState> => {
     return await axios
-        .delete(`https://dummyjson.com/users/${id}`)
+        .delete(`/api/users/${id}`)
         .then(response => response.data)
         .catch(err => {
             throw err;
@@ -196,17 +196,17 @@ function* deleteUserSaga(
 }
 //  Replace with your API call function to show user details
 
-const userDetails = async (id: string | undefined): Promise<UserState> => {
+const userDetails = async (
+    id: string | undefined | string[]
+): Promise<UserState> => {
     return await axios
-        .get(`api/users/${id}`)
+        .get(`/api/users/${id}`)
         .then(response => response.data)
         .catch(err => {
             throw err;
         });
 };
-function* UserDetailSaga(
-    action: ReturnType<typeof deleteUserRequest>
-): unknown {
+function* UserDetailSaga(action: ReturnType<typeof viewUsersRequest>): unknown {
     yield put(showLoader());
     try {
         const user = yield call(userDetails, action.payload.id);

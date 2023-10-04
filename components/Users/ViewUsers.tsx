@@ -5,12 +5,13 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 type User = {
     firstName: string;
-    lastName: string;
+    lastname: string;
     email: string;
-    age: number;
+    gender: string;
     phone: string;
 };
 
@@ -23,7 +24,7 @@ const ViewUsers: React.FC = () => {
     const isLoading = useSelector(
         (state: RootState) => state.loaderReducer.loading
     );
-    
+
     // get the user id from params
     useEffect(() => {
         if (router.query.id) {
@@ -46,7 +47,14 @@ const ViewUsers: React.FC = () => {
                 <div className="bg-[#F0F2F5]">
                     <>
                         <Row>
-                            <Col className="px-[15px] py-[15px]" span={24}>
+                            <Col
+                                className="flex items-center px-[15px] py-[15px]"
+                                span={24}
+                            >
+                                <ArrowLeftOutlined
+                                    onClick={() => router.push("/users")}
+                                    className="text-[#1D1D1E] cursor-pointer text-[20px] mr-[10px] pb-[10px]"
+                                />
                                 <Typography.Title level={3}>
                                     Users Details
                                 </Typography.Title>
@@ -62,7 +70,8 @@ const ViewUsers: React.FC = () => {
                                                 Name
                                             </Typography>
                                             <Typography className="text-[16px]">
-                                                {userData?.firstName}
+                                                {userData?.firstName}{" "}
+                                                {userData?.lastname}
                                             </Typography>
                                         </Col>
                                         <Col span={12}>
@@ -85,10 +94,10 @@ const ViewUsers: React.FC = () => {
                                         </Col>
                                         <Col span={12}>
                                             <Typography className="text-[18px] font-[600]">
-                                                Age
+                                                Gender
                                             </Typography>
                                             <Typography className="text-[16px]">
-                                                {userData?.age}
+                                                {userData?.gender}
                                             </Typography>
                                         </Col>
                                     </Row>

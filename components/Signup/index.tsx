@@ -34,7 +34,6 @@ const Signup: React.FC = () => {
     const signupData = useSelector(
         (state: RootState) => state.signupReducer || {}
     );
-    // phone number prefix selector
 
     // Form Item layout for the agreement checkbox
     const tailFormItemLayout = {

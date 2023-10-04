@@ -28,7 +28,6 @@ import {
     deleteUserRequest,
     fetchUsersRequest,
 } from "@/redux/actions/user.action";
-import UserModal from "./UserModal";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
 
@@ -36,14 +35,6 @@ interface UserListProps {
     fetchUsers?: () => Promise<unknown[]>; // Define the prop type
 }
 type User = object;
-type UserModalState = {
-    id: string;
-    firstName: string;
-    email: string;
-    phone: string;
-    age: number;
-    image: string;
-};
 
 const Users: React.FC<UserListProps> = () => {
     const dispatch = useDispatch();
@@ -53,21 +44,15 @@ const Users: React.FC<UserListProps> = () => {
         (state: RootState) => state.loaderReducer.loading
     );
     const [users, setUsers] = useState<User[] | []>([]);
-    const [open, setOpen] = useState<boolean>(false);
-    const [isEdit, setIsEdit] = useState<boolean>(false);
     const [id, setID] = useState<string>("");
-    const [editUser, setEditUser] = useState<UserModalState | object>({});
 
-    // open the edit modal
+    // open the edit page
     const handleEdit = () => {
-        setIsEdit(true);
-        setOpen(!open);
+        router.push(`/users/edit/${id}`);
     };
-    // open the add modal
+    // open the create page
     const handleCreate = () => {
-        setOpen(!open);
-        setIsEdit(false);
-        setEditUser({});
+        router.push("/users/create");
     };
 
     // set the users list
@@ -87,7 +72,7 @@ const Users: React.FC<UserListProps> = () => {
         swal({
             title: "Are you sure you want to delete this user?",
             icon: "warning",
-            buttons: [true, true],
+            buttons: ["No", "Yes"],
             dangerMode: true,
         }).then(willDelete => {
             if (willDelete) {
@@ -134,7 +119,7 @@ const Users: React.FC<UserListProps> = () => {
         {
             title: "Profile",
             key: "image",
-            render: user => <Avatar size={50} src={user.image} className="" />,
+            render: user => <Avatar size={50} src={user.image} />,
         },
         {
             title: "Name",
@@ -173,8 +158,7 @@ const Users: React.FC<UserListProps> = () => {
                     <Space size="middle">
                         <MoreOutlined
                             onClick={() => {
-                                setEditUser(record);
-                                setID((record as { id: string }).id);
+                                setID((record as { _id: string })._id);
                             }}
                             className="text-[24px] cursor-pointer"
                         />
@@ -243,18 +227,6 @@ const Users: React.FC<UserListProps> = () => {
                             )}
                         </Col>
                     </Row>
-                    {/* add common modal for add & edit users */}
-                    {open && (
-                        <UserModal
-                            open={open}
-                            id={id}
-                            setOpen={setOpen}
-                            userToEdit={editUser}
-                            isEdit={isEdit}
-                            setIsEdit={setIsEdit}
-                            setEditUser={setEditUser}
-                        />
-                    )}
                 </>
             </div>
         </Layout.Content>

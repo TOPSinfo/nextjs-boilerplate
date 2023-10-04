@@ -34,20 +34,21 @@ type CreateUser = {
     gender: string;
 };
 type UpdateUser = {
-    id: number;
+    id: string;
     firstName: string;
     email: string;
     phone: string;
-    age?: number;
-    image: string;
+    lastname: string;
+    gender: string;
 };
 
 type ViewUser = {
+    _id: string;
     firstName: string;
-    lastName: string;
     email: string;
-    age: number;
     phone: string;
+    lastname: string;
+    gender: string;
 };
 
 // type of request action for fetch users
@@ -110,7 +111,7 @@ export interface DeleteUsersFailureAction
 // type of request action for view users details
 export interface ViewUsersRequestAction
     extends Action<typeof VIEW_USER_REQUEST> {
-    payload: { id: string | undefined | string[] }; // Replace 'User' with your actual user data type
+    payload: { id: string | undefined | string[] }; // Replace 'payload' with your actual payload type
 }
 
 export interface ViewUsersSuccessAction
