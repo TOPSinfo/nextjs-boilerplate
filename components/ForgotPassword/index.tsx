@@ -74,7 +74,7 @@ const ForgotPassword: React.FC = () => {
                                     </Button>
                                     <Typography className="text-[14px] text-center my-[10px] font-[400]">
                                         <Link
-                                            className="text-[#4980FF]"
+                                            className="text-[#3e79f7]"
                                             href={"/"}
                                         >
                                             Back to Sign In

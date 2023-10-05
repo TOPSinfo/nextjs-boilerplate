@@ -14,7 +14,7 @@ export const apiCall = async (email: string) => {
     const userData = { email: email };
     // add the api URL & parameters
     return await axios
-        .post("/forgot", userData)
+        .post("/api/auth/forgot", userData)
         .then(response => response.data)
         .catch(err => {
             throw err;
@@ -27,15 +27,10 @@ export function* forgotRequestSaga(
     yield put(showLoader());
     try {
         const response = yield call(apiCall, action.payload.email);
-        const data = yield response.json();
-        if (response.status === 200) {
-            yield put(forgotSuccess(data));
-            // change message a/c to response coming from api
-            toast.success("Sent Email Successfully to reset your password");
-        } else {
-            toast.error(data?.message);
-            yield put(forgotFail(data));
-        }
+
+        yield put(forgotSuccess(response));
+        // change message a/c to response coming from api
+        toast.success(response.message);
     } catch (err: unknown) {
         if (err instanceof AxiosError) {
             // Now TypeScript recognizes err as AxiosError, and you can access err.response

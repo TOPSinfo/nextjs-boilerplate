@@ -5,6 +5,7 @@ interface UserDocument extends Document {
     username: string;
     email: string;
     password: string;
+    resetToken: string;
     comparePassword(password: string): Promise<boolean>;
 }
 interface Methods {
@@ -16,6 +17,7 @@ const userSchema = new Schema<UserDocument, Methods>(
         email: { type: String, required: true, unique: true },
         username: { type: String, required: true },
         password: { type: String, required: true },
+        resetToken: { type: String },
     },
     {
         timestamps: true,
