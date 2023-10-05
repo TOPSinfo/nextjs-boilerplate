@@ -53,7 +53,10 @@ type ViewUser = {
 
 // type of request action for fetch users
 export interface FetchUsersRequestAction
-    extends Action<typeof USERS_LIST_REQUEST> {}
+    extends Action<typeof USERS_LIST_REQUEST> {
+        page: number;
+        search?: string;
+    }
 
 export interface FetchUsersSuccessAction
     extends Action<typeof USERS_LIST_SUCCESS> {
@@ -141,8 +144,10 @@ export type CreateUserActionTypes =
     | ViewUsersFailureAction;
 
 // Export action creators for fetch users
-export const fetchUsersRequest = (): FetchUsersRequestAction => ({
+export const fetchUsersRequest = (page: number, search?: string): FetchUsersRequestAction => ({
     type: USERS_LIST_REQUEST,
+    page,
+    search,
 });
 
 export const fetchUsersSuccess = (users: User): FetchUsersSuccessAction => ({

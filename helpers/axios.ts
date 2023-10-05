@@ -13,16 +13,7 @@ let refreshToken: () => void;
 
 authenticatedAxios.interceptors.request.use(
     config => {
-        console.log(sessionData?.user?.accessToken, "sessionData");
-        console.log(
-            config.headers["Authorization"],
-            "configconfigconfigconfigconfig"
-        );
         if (sessionData?.user?.accessToken) {
-            console.log(
-                sessionData?.user?.accessToken,
-                "sessionData in if ===============>"
-            );
             config.headers[
                 "Authorization"
             ] = `${sessionData?.user?.accessToken}`;
@@ -36,14 +27,12 @@ authenticatedAxios.interceptors.response.use(
     response => response,
     async error => {
         const prevRequest = error?.config;
-        console.log("test request", error?.response?.status, sessionData?.user);
 
         if (
             error?.response?.status === 401 &&
             prevRequest?.headers["Authorization"] &&
             sessionData?.user?.refreshToken
         ) {
-            console.log("in if");
             if (!prevRequest.sent) {
                 prevRequest.sent = true;
                 await refreshToken();

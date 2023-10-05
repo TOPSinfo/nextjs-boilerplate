@@ -1,14 +1,19 @@
 import { Dropdown, Layout, Typography } from "antd";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { MenuProps } from "antd";
 import { logout } from "@/redux/actions/login.action";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 
 const { Header } = Layout;
+interface User {
+    username: string;
+    email: string;
+}
 const AppHeader = () => {
     const dispatch = useDispatch();
+    const [profile, setProfile] = useState<User | null>(null);
     const items: MenuProps["items"] = [
         {
             label: (
@@ -34,6 +39,10 @@ const AppHeader = () => {
             key: "1",
         },
     ];
+    useEffect(() => {
+        const data = JSON.parse(localStorage.getItem("user") as string);
+        setProfile(data);
+    }, []);
     return (
         <>
             <Header
@@ -68,8 +77,8 @@ const AppHeader = () => {
                             />{" "}
                         </div>
                         <div className="flex justify-center items-center">
-                            <Typography className="text-center pl-[10px] font-poppins text-[16px] align-middle	">
-                                Test
+                            <Typography className="text-center capitalize pl-[10px] font-poppins text-[16px] align-middle	">
+                                {profile?.username}
                             </Typography>
                         </div>
                     </div>

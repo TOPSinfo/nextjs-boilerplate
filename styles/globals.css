@@ -35,7 +35,7 @@ body {
     height: 100%;
 }
 .ant-spin-dot {
-    color: #1151e3;
+    color: #3e79f7;
 }
 .dropzone {
     flex: 1;
@@ -51,4 +51,17 @@ body {
     color: #bdbdbd;
     outline: none;
     transition: border 0.24s ease-in-out;
+}
+.search-input button {
+    background: #3e79f7;
+}
+.swal-icon--warning__body {
+    height: 30px;
+}
+.swal-icon {
+    width: 60px;
+    height: 60px;
+}
+.swal-title {
+    font-size: 20px;
 }

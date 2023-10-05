@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-    Avatar,
     Button,
     Col,
     Dropdown,
+    Input,
     Layout,
     Pagination,
     Result,
@@ -35,6 +35,7 @@ interface UserListProps {
     fetchUsers?: () => Promise<unknown[]>; // Define the prop type
 }
 type User = object;
+const { Search } = Input;
 
 const Users: React.FC<UserListProps> = () => {
     const dispatch = useDispatch();
@@ -45,7 +46,7 @@ const Users: React.FC<UserListProps> = () => {
     );
     const [users, setUsers] = useState<User[] | []>([]);
     const [id, setID] = useState<string>("");
-
+    const [pageNumber, setPageNumber] = useState<number>(0);
     // open the edit page
     const handleEdit = () => {
         router.push(`/users/edit/${id}`);
@@ -64,8 +65,18 @@ const Users: React.FC<UserListProps> = () => {
 
     // fetch the user data
     useEffect(() => {
-        dispatch(fetchUsersRequest());
+        dispatch(fetchUsersRequest(pageNumber));
     }, [dispatch]);
+
+    // function for pagination
+    const handlePageChange = (page: number) => {
+        setPageNumber(page);
+        dispatch(fetchUsersRequest(page));
+    };
+
+    const handleSearch = (e: string) => {
+        dispatch(fetchUsersRequest(pageNumber, e));
+    };
 
     //delete the user
     const handleDelete = useCallback(() => {
@@ -116,11 +127,11 @@ const Users: React.FC<UserListProps> = () => {
     ];
     // table header
     const columns: ColumnsType<User> = [
-        {
-            title: "Profile",
-            key: "image",
-            render: user => <Avatar size={50} src={user.image} />,
-        },
+        // {
+        //     title: "Profile",
+        //     key: "image",
+        //     render: user => <Avatar size={50} src={user.image} />,
+        // },
         {
             title: "Name",
             key: "firstName",
@@ -129,21 +140,41 @@ const Users: React.FC<UserListProps> = () => {
                     {user.firstName} {user.lastname}
                 </Typography>
             ),
+            sorter: (a, b) =>
+                (a as { firstName: string }).firstName.localeCompare(
+                    (b as { firstName: string }).firstName
+                ),
+            sortDirections: ["descend", "ascend"],
         },
         {
             title: "Gender",
             dataIndex: "gender",
             key: "gender",
+            sorter: (a, b) =>
+                (a as { gender: string }).gender.localeCompare(
+                    (b as { gender: string }).gender
+                ),
+            sortDirections: ["descend", "ascend"],
         },
         {
             title: "Phone Number",
             dataIndex: "phone",
             key: "phone",
+            sorter: (a, b) =>
+                (a as { phone: string }).phone.localeCompare(
+                    (b as { phone: string }).phone
+                ),
+            sortDirections: ["descend", "ascend"],
         },
         {
             title: "Email",
             dataIndex: "email",
             key: "email",
+            sorter: (a, b) =>
+                (a as { email: string }).email.localeCompare(
+                    (b as { email: string }).email
+                ),
+            sortDirections: ["descend", "ascend"],
         },
 
         {
@@ -183,6 +214,14 @@ const Users: React.FC<UserListProps> = () => {
                             className="px-[15px] py-[15px] flex justify-end"
                             span={12}
                         >
+                            <Search
+                                placeholder="Search"
+                                allowClear
+                                onSearch={handleSearch}
+                                enterButton
+                                className="mr-[15px] border-[#3e79f7] search-input mt-[5px]"
+                            />
+
                             <Button
                                 className="bg-[#3e79f7] hover:text-[#3e79f7] hover:bg-[#fff] text-[#fff] "
                                 size="large"
@@ -214,7 +253,10 @@ const Users: React.FC<UserListProps> = () => {
                                     pageSize={userData?.limit}
                                     total={userData?.total}
                                     showSizeChanger={false}
-                                    // add onchange for the get all data a/c to pagination
+                                    onChange={
+                                        (page: number) =>
+                                            handlePageChange(page - 1) // add page - 1 because in monogodb it takes 0 as first page
+                                    }
                                 />
                             )}
                             {users?.length === 0 && (

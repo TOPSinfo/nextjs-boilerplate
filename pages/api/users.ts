@@ -33,17 +33,67 @@ export default async function handler(
     if (method === "GET") {
         try {
             const page = req?.query?.page ? req.query?.page : 0;
-            const limit = 2;
-            const pageSize = await UsersListModel.count();
+            const limit = 5;
 
-            const users = await UsersListModel.find({})
-                .sort({ createdAt: -1 })
-                .skip(limit * (page as number))
-                .limit(limit);
+            const filter = req?.query?.search;
+
+            const regex = filter ? new RegExp(filter as string, "i") : /.*/;
+
+            const skip = limit * (page as number);
+            const query = [
+                {
+                    $match: {
+                        $or: [
+                            { code: { $regex: regex } },
+                            { firstName: { $regex: regex } },
+                            { lastname: { $regex: regex } },
+                            { email: { $regex: regex } },
+                        ],
+                    },
+                },
+
+                {
+                    $facet: {
+                        paginatedResults: [
+                            { $sort: { createdAt: -1 } },
+                            {
+                                $skip: skip,
+                            },
+                            {
+                                $limit: limit,
+                            },
+                            {
+                                $project: {
+                                    updatedAt: 0,
+                                    __v: 0,
+                                },
+                            },
+                        ],
+                        count: [
+                            {
+                                $count: "count",
+                            },
+                        ],
+                    },
+                },
+                {
+                    $project: {
+                        result: "$paginatedResults",
+                        count: {
+                            $arrayElemAt: ["$count", 0],
+                        },
+                    },
+                },
+            ];
+
+            const users = await UsersListModel.aggregate(query as never);
+            const pageSize = filter
+                ? users[0]?.count.count
+                : await UsersListModel.count();
             const result = {
-                users: users,
+                users: users[0]?.result,
                 total: pageSize,
-                limit: 2,
+                limit: limit,
                 skip: limit * (page as number),
             };
             res.status(200).json(result);

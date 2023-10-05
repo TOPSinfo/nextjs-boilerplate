@@ -34,8 +34,6 @@ const Login: React.FC = () => {
                 email: session.user.email,
                 username: session.user.username,
             };
-            localStorage.setItem("token", session?.user?.accessToken);
-            localStorage.setItem("refreshToken", session?.user?.refreshToken);
             localStorage.setItem("user", JSON.stringify(user));
         }
     }, [session]);

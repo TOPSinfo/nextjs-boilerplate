@@ -53,15 +53,21 @@ type EditUser = {
     id: string;
 };
 // Replace with your API call function to fetch user data
-const fetchUserData = async (): Promise<User> => {
+const fetchUserData = async (
+    page: number,
+    search: string | undefined
+): Promise<User> => {
     // Example API call
     const accessToken = localStorage.getItem("token");
     const headers = {
         headers: { Authorization: `${accessToken}` },
     };
+    const apiUrl = search
+        ? `/api/users?search=${search}&page=${page}`
+        : `/api/users?&page=${page}`;
 
     return await axios
-        .get("/api/users", headers)
+        .get(`${apiUrl}`, headers)
         .then(response => response.data)
         .catch(err => {
             throw err;
@@ -69,10 +75,12 @@ const fetchUserData = async (): Promise<User> => {
 };
 
 // Saga worker function
-export function* fetchUsers(): unknown {
+export function* fetchUsers(
+    action: ReturnType<typeof fetchUsersRequest>
+): unknown {
     yield put(showLoader());
     try {
-        const users = yield fetchUserData();
+        const users = yield fetchUserData(action.page, action.search);
 
         yield put(fetchUsersSuccess(users));
     } catch (err: unknown) {
@@ -181,7 +189,7 @@ function* deleteUserSaga(
         yield call(deleteUser, action.payload.id);
         yield put(deleteUserSuccess());
         toast.success("User deleted successfully");
-        yield put(fetchUsersRequest());
+        yield put(fetchUsersRequest(0));
     } catch (err: unknown) {
         if (err instanceof AxiosError) {
             // Now TypeScript recognizes err as AxiosError, and you can access err.response

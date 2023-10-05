@@ -24,6 +24,12 @@ const App = ({ Component, pageProps }: CustomAppProps) => {
                                 token: {
                                     fontFamily: "Poppins",
                                 },
+                                components: {
+                                    Menu: {
+                                        itemSelectedBg: "rgba(	62,	121,	248,0.3)",
+                                        itemSelectedColor: "#3e79f7"
+                                    },
+                                },
                             }}
                         >
                             <Component {...pageProps} />
