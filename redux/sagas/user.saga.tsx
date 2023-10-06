@@ -58,16 +58,12 @@ const fetchUserData = async (
     search: string | undefined
 ): Promise<User> => {
     // Example API call
-    const accessToken = localStorage.getItem("token");
-    const headers = {
-        headers: { Authorization: `${accessToken}` },
-    };
     const apiUrl = search
         ? `/api/users?search=${search}&page=${page}`
         : `/api/users?&page=${page}`;
 
     return await axios
-        .get(`${apiUrl}`, headers)
+        .get(`${apiUrl}`)
         .then(response => response.data)
         .catch(err => {
             throw err;

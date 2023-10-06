@@ -134,7 +134,7 @@ const CreateUsers: React.FC<CreateUserProps> = ({ edit }) => {
                     >
                         <ArrowLeftOutlined
                             onClick={() => router.push("/users")}
-                            className="text[#161616] cursor-pointer text-[20px] mr-[10px] pb-[10px]"
+                            className="text-[#161616] cursor-pointer text-[20px] mr-[10px] pb-[10px]"
                         />
                         <Typography.Title level={3}>
                             {edit ? "Edit User" : "Create User"}

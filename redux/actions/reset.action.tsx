@@ -6,7 +6,11 @@ import {
 
 interface ResetRequestAction {
     type: typeof RESET_PASSWORD_REQUEST;
-    payload: { password: string; cnfPassword: string };
+    payload: {
+        password: string;
+        cnfPassword: string;
+        token: string | string[];
+    };
 }
 // add the payload a/c to the api response
 interface ResetSuccessAction {
@@ -24,12 +28,14 @@ export type AuthActionTypes =
 
 export const resetRequest = (
     cnfPassword: string,
-    password: string
+    password: string,
+    token: string | string[]
 ): ResetRequestAction => ({
     type: RESET_PASSWORD_REQUEST,
     payload: {
         cnfPassword,
         password,
+        token,
     },
 });
 

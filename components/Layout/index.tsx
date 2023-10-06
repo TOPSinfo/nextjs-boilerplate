@@ -18,19 +18,18 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     const [isAuth, setIsAuth] = useState<boolean | null>(null); // Use boolean for isAuth
     const loginData = useSelector((state: RootState) => state.loginReducer);
-    const { data: session } = useSession();
+    const session = useSession();
 
     const refreshToken = useRefreshToken();
-
     useEffect(() => {
-        if (session?.user) {
-            console.log("Session", session);
-            initializeAuthenticatedAxios(session, refreshToken);
+        if (session?.data?.user) {
+            console.log("data", session);
+            initializeAuthenticatedAxios(session?.data, refreshToken);
         }
-    }, [session?.user]);
+    }, [session?.data?.user]);
 
     useEffect(() => {
-        if (loginData.isLoggedIn) {
+        if (loginData?.isLoggedIn) {
             setIsAuth(true);
         } else if (loginData === null) {
             setIsAuth(null);

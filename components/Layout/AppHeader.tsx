@@ -5,15 +5,14 @@ import type { MenuProps } from "antd";
 import { logout } from "@/redux/actions/login.action";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
+import { useSession } from "next-auth/react";
 
 const { Header } = Layout;
-interface User {
-    username: string;
-    email: string;
-}
+
 const AppHeader = () => {
     const dispatch = useDispatch();
-    const [profile, setProfile] = useState<User | null>(null);
+    const session = useSession();
+    const [profile, setProfile] = useState<string>("");
     const items: MenuProps["items"] = [
         {
             label: (
@@ -40,9 +39,11 @@ const AppHeader = () => {
         },
     ];
     useEffect(() => {
-        const data = JSON.parse(localStorage.getItem("user") as string);
-        setProfile(data);
-    }, []);
+        if (session?.data) {
+            const data = session?.data?.user?.username;
+            setProfile(data);
+        }
+    }, [session]);
     return (
         <>
             <Header
@@ -78,7 +79,7 @@ const AppHeader = () => {
                         </div>
                         <div className="flex justify-center items-center">
                             <Typography className="text-center capitalize pl-[10px] font-poppins text-[16px] align-middle	">
-                                {profile?.username}
+                                {profile}
                             </Typography>
                         </div>
                     </div>

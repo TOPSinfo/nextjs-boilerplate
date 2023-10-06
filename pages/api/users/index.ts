@@ -9,7 +9,6 @@ export default async function handler(
 ) {
     await connectDb();
     const { method, headers } = req;
-
     if (!headers.authorization || !verifyJwt(headers.authorization as never)) {
         const err = { message: "User not authorized" };
         return res.status(401).json(err);

@@ -1,16 +1,20 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { RESET_PASSWORD_REQUEST } from "../constant";
 import { toast } from "react-toastify";
 import { resetFail, resetRequest, resetSuccess } from "../actions/reset.action";
 import { hideLoader, showLoader } from "../actions/login.action";
 
 // call axios method for forgot api call
-export const apiCall = async (password: string, cnfPassword: string) => {
-    const userData = { password: password, cnfPassword: cnfPassword };
+export const apiCall = async (
+    password: string,
+    cnfPassword: string,
+    token: string | string[]
+) => {
+    const userData = { password: password, confirmPassword: cnfPassword };
     // add the api URL & parameters
     return await axios
-        .post("/reset", userData)
+        .put(`/api/auth/reset/${token}`, userData)
         .then(response => response.data)
         .catch(err => {
             throw err;
@@ -25,22 +29,22 @@ export function* resetRequestSaga(
         const response = yield call(
             apiCall,
             action.payload.password,
-            action.payload.cnfPassword
+            action.payload.cnfPassword,
+            action.payload.token
         );
-        const data = yield response.json();
-        if (response.status === 200) {
-            yield put(resetSuccess());
-            // change message a/c to response coming from api
-            toast.success("Password updated successfully");
-        } else {
-            toast.error(data?.message);
-            yield put(resetFail(data));
-        }
+
+        yield put(resetSuccess());
+        toast.success(response.message);
+        window.location.href = "/";
     } catch (err: unknown) {
-        console.log("Error");
-        const error = err as { message: string };
-        toast.error(error.message);
-        yield put(resetFail(error.message));
+        if (err instanceof AxiosError) {
+            // Now TypeScript recognizes err as AxiosError, and you can access err.response
+            if (err.response) {
+                toast.error(err?.response?.data?.message);
+
+                yield put(resetFail(err?.response?.data?.message));
+            }
+        }
     } finally {
         yield put(hideLoader());
     }

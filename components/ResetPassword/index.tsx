@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Form, Input, Row, Typography } from "antd";
 import { useDispatch } from "react-redux";
 import { resetRequest } from "@/redux/actions/reset.action";
+import { useRouter } from "next/router";
 type User = {
     cnfPassword: string;
     password: string;
@@ -9,14 +10,23 @@ type User = {
 
 const ResetPassword: React.FC = () => {
     const dispatch = useDispatch();
+    const router = useRouter();
+    const [token, setToken] = useState<string | string[]>("");
 
+    useEffect(() => {
+        if (router?.query?.token) {
+            setToken(router.query.token);
+        }
+    }, [router]);
+
+    // submit the reset password
     const handleSubmit = (values: {
         password: string;
         cnfPassword: string;
     }) => {
         console.log(values, "handleSubmit");
         // call login request method from action file
-        dispatch(resetRequest(values.password, values.cnfPassword));
+        dispatch(resetRequest(values.password, values.cnfPassword, token));
     };
     return (
         <div className=" h-screen bg-[url('/images/background.jpg')] flex items-center justify-center my-[0px] mx-auto">
@@ -55,7 +65,8 @@ const ResetPassword: React.FC = () => {
                                                 "Password must have a minimum length of 8",
                                         },
                                         {
-                                            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                            pattern:
+                                                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                                             message:
                                                 "Password must contain at least one lowercase letter, uppercase letter, number, and special character",
                                         },
