@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
+    Avatar,
     Button,
     Col,
     Dropdown,
@@ -30,6 +31,7 @@ import {
 } from "@/redux/actions/user.action";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 interface UserListProps {
     fetchUsers?: () => Promise<unknown[]>; // Define the prop type
@@ -40,6 +42,7 @@ const { Search } = Input;
 const Users: React.FC<UserListProps> = () => {
     const dispatch = useDispatch();
     const router = useRouter();
+    const session = useSession();
     const userData = useSelector((state: RootState) => state.userReducer);
     const isLoading = useSelector(
         (state: RootState) => state.loaderReducer.loading
@@ -65,8 +68,10 @@ const Users: React.FC<UserListProps> = () => {
 
     // fetch the user data
     useEffect(() => {
-        dispatch(fetchUsersRequest(pageNumber));
-    }, [dispatch]);
+        if (session?.data) {
+            dispatch(fetchUsersRequest(pageNumber));
+        }
+    }, [dispatch, session]);
 
     // function for pagination
     const handlePageChange = (page: number) => {
@@ -127,11 +132,11 @@ const Users: React.FC<UserListProps> = () => {
     ];
     // table header
     const columns: ColumnsType<User> = [
-        // {
-        //     title: "Profile",
-        //     key: "image",
-        //     render: user => <Avatar size={50} src={user.image} />,
-        // },
+        {
+            title: "Profile",
+            key: "profilePic",
+            render: user => <Avatar size={50} alt="user" src={user.profilePic} />,
+        },
         {
             title: "Name",
             key: "firstName",
@@ -243,6 +248,7 @@ const Users: React.FC<UserListProps> = () => {
                                         pagination={false}
                                         dataSource={users}
                                         rowKey={"_id"}
+                                        showSorterTooltip={false}
                                     />
                                 </>
                             )}{" "}

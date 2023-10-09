@@ -40,6 +40,7 @@ type CreateUser = {
     phone: string;
     lastname: string;
     gender: string;
+    profile_pic: File;
 };
 type UserState = {
     user: CreateUser;
@@ -93,16 +94,18 @@ export function* fetchUsers(
 }
 //  Replace with your API call function to create user
 const createUser = async (user: CreateUser): Promise<UserState> => {
-    const userData = {
-        email: user.email,
-        firstName: user.firstName,
-        phone: user.phone,
-        lastname: user.lastname,
-        gender: user.gender,
-    };
+    const formData = new FormData();
+    formData.append("email", user.email);
+    formData.append("firstName", user.firstName);
+    formData.append("phone", user.phone);
+    formData.append("lastname", user.lastname);
+    formData.append("gender", user.gender);
+    formData.append("profile_pic", user.profile_pic);
 
     return await axios
-        .post("/api/users", userData)
+        .post("/api/users", formData, {
+            headers: { "Content-Type": "multipart/form" },
+        })
         .then(response => response.data)
         .catch(err => {
             throw err;

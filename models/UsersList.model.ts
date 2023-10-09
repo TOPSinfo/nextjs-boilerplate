@@ -6,6 +6,7 @@ interface UserDocument extends Document {
     email: string;
     phone: string;
     gender: string;
+    profilePic: string;
 }
 
 const userListSchema = new Schema<UserDocument>(
@@ -15,6 +16,7 @@ const userListSchema = new Schema<UserDocument>(
         email: { type: String, required: true },
         phone: { type: String, required: true },
         gender: { type: String, required: true },
+        profilePic: { type: String, required: true },
     },
     {
         timestamps: true,

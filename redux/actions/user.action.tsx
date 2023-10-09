@@ -29,7 +29,7 @@ type CreateUser = {
     email: string;
     phone: string;
     age?: number;
-    image: string;
+    profile_pic: File;
     lastname: string;
     gender: string;
 };

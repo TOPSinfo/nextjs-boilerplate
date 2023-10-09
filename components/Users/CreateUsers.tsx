@@ -10,6 +10,7 @@ import {
     Typography,
     Select,
     Card,
+    Upload,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,12 +19,13 @@ import {
     viewUsersRequest,
 } from "@/redux/actions/user.action";
 import { RootState } from "@/redux/store";
-import type { UploadFile } from "antd/es/upload/interface";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import type { RcFile, UploadProps } from "antd/es/upload";
+import { ArrowLeftOutlined, PlusOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
+import type { UploadFile } from "antd/es/upload/interface";
 
 interface User {
-    image: string;
+    profilePic: string;
     id: string;
     firstName: string;
     lastname: string;
@@ -37,6 +39,13 @@ const { Option } = Select;
 interface CreateUserProps {
     edit?: boolean;
 }
+const getBase64 = (file: RcFile): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
+    });
 const CreateUsers: React.FC<CreateUserProps> = ({ edit }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -49,7 +58,10 @@ const CreateUsers: React.FC<CreateUserProps> = ({ edit }) => {
         (state: RootState) => state.viewUserReducer.user
     );
 
-    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [fileList, setFileList] = useState<UploadFile | null | undefined>(
+        null
+    );
+    const [profile, setProfile] = useState<UploadFile[]>([]);
     // form initialization
     const [initialValue, setInitialValue] = useState<User | object>({
         firstName: "",
@@ -78,25 +90,49 @@ const CreateUsers: React.FC<CreateUserProps> = ({ edit }) => {
     }, [router]);
 
     useEffect(() => {
-        const prefixData = userData?.phone.includes(" ")
-            ? userData?.phone.split(" ")[0]
-            : "";
-        const phoneNumber = userData?.phone.includes(" ")
-            ? userData?.phone.split(" ")[1]
-            : userData?.phone;
-        const userEditData = {
-            firstName: userData?.firstName,
-            lastname: userData?.lastname,
-            email: userData?.email,
-            phone: phoneNumber,
-            gender: userData?.gender,
-            id: userData?._id,
-            prefix: prefixData,
-        };
-        setInitialValue(userEditData);
-        form.setFieldsValue(userEditData);
+        if (userData && edit) {
+            const prefixData = userData?.phone.includes(" ")
+                ? userData?.phone.split(" ")[0]
+                : "";
+            const phoneNumber = userData?.phone.includes(" ")
+                ? userData?.phone.split(" ")[1]
+                : userData?.phone;
+            const userEditData = {
+                firstName: userData?.firstName,
+                lastname: userData?.lastname,
+                email: userData?.email,
+                phone: phoneNumber,
+                gender: userData?.gender,
+                id: userData?._id,
+                prefix: prefixData,
+            };
+            setFileList({
+                uid: (userData as User)?.id,
+                name: (userData as User)?.firstName,
+                url: (userData as User)?.profilePic,
+            });
+            setProfile([
+                {
+                    uid: (userData as User)?.id,
+                    name: (userData as User)?.firstName,
+                    url: (userData as User)?.profilePic,
+                },
+            ]);
+            setInitialValue(userEditData);
+            form.setFieldsValue(userEditData);
+        }
     }, [userData]);
+    const handlePreview = async (file: UploadFile) => {
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj as RcFile);
+        }
+    };
 
+    const handleChange: UploadProps["onChange"] = ({
+        fileList: newFileList,
+    }) => {
+        setFileList(newFileList[0]?.originFileObj);
+    };
     // reset the form
     const handleCancel = () => {
         form.resetFields();
@@ -106,15 +142,20 @@ const CreateUsers: React.FC<CreateUserProps> = ({ edit }) => {
         try {
             const values = await form.validateFields();
             values.phone = values.prefix.concat(" ", values.phone);
-            console.log("values:", values, fileList, setFileList);
+            values.profile_pic = fileList;
+            console.log("values:", values, fileList);
             if (edit) {
                 values.id = id;
                 dispatch(updateUserRequest(values));
+                form.resetFields();
+                setFileList(null);
+                setProfile([]);
             } else {
                 dispatch(createUserRequest(values));
+                form.resetFields();
+                setFileList(null);
+                setProfile([]);
             }
-
-            form.resetFields();
         } catch (error) {
             console.error("Validation error:", error);
         }
@@ -150,24 +191,35 @@ const CreateUsers: React.FC<CreateUserProps> = ({ edit }) => {
                         layout="vertical"
                     >
                         <Row>
-                            {/* <Form.Item<User>
-                    rules={[{ required: true, message: "Image is required" }]}
-                >
-                    <>
-                        <Upload
-                            listType="picture-card"
-                            fileList={fileList}
-                            onPreview={handlePreview}
-                            onChange={handleChange}
-                            maxCount={1}
-                        >
-                            <div>
-                                <PlusOutlined />
-                                <div style={{ marginTop: 8 }}>Upload</div>
-                            </div>
-                        </Upload>
-                    </>
-                </Form.Item> */}
+                            <Col className="pr-[15px]" xs={24} md={24}>
+                                <Form.Item<User>
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Image is required",
+                                        },
+                                    ]}
+                                >
+                                    <>
+                                        <Upload
+                                            listType="picture-card"
+                                            fileList={
+                                                edit ? profile : undefined
+                                            }
+                                            onPreview={handlePreview}
+                                            onChange={handleChange}
+                                            maxCount={1}
+                                        >
+                                            <div>
+                                                <PlusOutlined />
+                                                <div style={{ marginTop: 8 }}>
+                                                    Upload
+                                                </div>
+                                            </div>
+                                        </Upload>
+                                    </>
+                                </Form.Item>
+                            </Col>
                             <Col className="pr-[15px]" xs={24} md={12}>
                                 <p className="text-[14px] font-poppins text-left font-[400]">
                                     FirstName{" "}
@@ -236,6 +288,11 @@ const CreateUsers: React.FC<CreateUserProps> = ({ edit }) => {
                                         {
                                             required: true,
                                             message: "Phone Number is required",
+                                        },
+                                        {
+                                            pattern:
+                                                /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/,
+                                            message: "Only allows numbers",
                                         },
                                     ]}
                                 >

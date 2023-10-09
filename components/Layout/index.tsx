@@ -26,7 +26,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
             console.log("data", session);
             initializeAuthenticatedAxios(session?.data, refreshToken);
         }
-    }, [session?.data?.user]);
+    }, [session?.data]);
 
     useEffect(() => {
         if (loginData?.isLoggedIn) {
