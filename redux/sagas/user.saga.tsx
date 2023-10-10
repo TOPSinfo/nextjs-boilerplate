@@ -52,6 +52,7 @@ type EditUser = {
     lastname: string;
     gender: string;
     id: string;
+    profile_pic: File;
 };
 // Replace with your API call function to fetch user data
 const fetchUserData = async (
@@ -125,8 +126,8 @@ function* createUserSaga(
         if (err instanceof AxiosError) {
             // Now TypeScript recognizes err as AxiosError, and you can access err.response
             if (err.response) {
-                toast.error(err?.response?.data._message);
-                yield put(createUserFailure(err?.response?.data?._message));
+                toast.error(err?.response?.data.message);
+                yield put(createUserFailure(err?.response?.data?.message));
             }
         }
     } finally {
@@ -135,15 +136,17 @@ function* createUserSaga(
 }
 //  Replace with your API call function to update user
 const updateUser = async (user: EditUser): Promise<UserState> => {
-    const userData = {
-        email: user.email,
-        firstName: user.firstName,
-        phone: user.phone,
-        lastname: user.lastname,
-        gender: user.gender,
-    };
+    const formData = new FormData();
+    formData.append("email", user.email);
+    formData.append("firstName", user.firstName);
+    formData.append("phone", user.phone);
+    formData.append("lastname", user.lastname);
+    formData.append("gender", user.gender);
+    formData.append("profile_pic", user.profile_pic);
     return await axios
-        .put(`/api/users/${user.id}`, userData)
+        .put(`/api/users/${user.id}`, formData, {
+            headers: { "Content-Type": "multipart/form" },
+        })
         .then(response => response.data)
         .catch(err => {
             throw err;
@@ -162,8 +165,8 @@ function* updateUserSaga(
         if (err instanceof AxiosError) {
             // Now TypeScript recognizes err as AxiosError, and you can access err.response
             if (err.response) {
-                toast.error(err?.message);
-                yield put(updateUserFailure(err?.message));
+                toast.error(err?.response?.data.message);
+                yield put(updateUserFailure(err?.response?.data.message));
             }
         }
     } finally {
@@ -193,8 +196,8 @@ function* deleteUserSaga(
         if (err instanceof AxiosError) {
             // Now TypeScript recognizes err as AxiosError, and you can access err.response
             if (err.response) {
-                toast.error(err?.message);
-                yield put(deleteUserFailure(err?.message));
+                toast.error(err?.response?.data.message);
+                yield put(deleteUserFailure(err?.response?.data.message));
             }
         }
     } finally {

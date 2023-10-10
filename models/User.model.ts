@@ -6,6 +6,13 @@ export interface UserDocument extends Document {
     email: string;
     password: string;
     resetToken: string;
+    birth_date: string;
+    gender: string;
+    address: string;
+    state: string;
+    city: string;
+    zip: string;
+    profilePic: string;
     comparePassword(password: string): Promise<boolean>;
 }
 interface Methods {
@@ -18,6 +25,13 @@ const userSchema = new Schema<UserDocument, Methods>(
         username: { type: String, required: true },
         password: { type: String, required: true },
         resetToken: { type: String },
+        birth_date: { type: String },
+        gender: { type: String },
+        address: { type: String },
+        state: { type: String },
+        city: { type: String },
+        zip: { type: String },
+        profilePic: { type: String },
     },
     {
         timestamps: true,

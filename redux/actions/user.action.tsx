@@ -40,6 +40,7 @@ type UpdateUser = {
     phone: string;
     lastname: string;
     gender: string;
+    profile_pic: File;
 };
 
 type ViewUser = {

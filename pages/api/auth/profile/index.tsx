@@ -1,11 +1,11 @@
 import { verifyJwt } from "@/libs/jwt";
 import connectDb from "@/libs/mongodb";
-import UsersListModel from "@/models/UsersList.model";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import fs from "fs";
 import multer from "multer";
 import { Request, Response } from "express";
+import UserModel from "@/models/User.model";
 export const config = {
     api: {
         bodyParser: false, // Disable built-in body parsing
@@ -16,7 +16,7 @@ interface MulterRequest extends NextApiRequest {
 }
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadDir = "./public/uploads";
+        const uploadDir = "./public/uploads/profileImage";
         fs.mkdirSync(uploadDir, { recursive: true });
         cb(null, uploadDir);
     },
@@ -51,22 +51,25 @@ export default async function handler(
             async (err: unknown) => {
                 console.log("error", err);
 
-                const filePath = `${process.env.NEXTAUTH_URL}uploads/${
-                    (req as MulterRequest).file.filename
-                }`;
+                const filePath = `${
+                    process.env.NEXTAUTH_URL
+                }uploads/profileImage/${(req as MulterRequest).file.filename}`;
                 try {
                     const user = {
-                        firstName: req.body.firstName,
-                        lastname: req.body.lastname,
-                        phone: req.body.phone,
-                        gender: req.body.gender,
+                        username: req.body.username,
                         email: req.body.email,
+                        birth_date: req.body.birth_date,
+                        city: req.body.city,
+                        state: req.body.state,
+                        gender: req.body.gender,
+                        address: req.body.address,
+                        zip: req.body.zip,
                         profilePic: filePath,
                     };
 
-                    const result = await UsersListModel.findOneAndUpdate(
+                    const result = await UserModel.findOneAndUpdate(
                         {
-                            _id: req.query.id,
+                            _id: req.body.id,
                         },
                         user
                     );
@@ -80,19 +83,9 @@ export default async function handler(
     }
     if (method === "GET") {
         try {
-            const users = await UsersListModel.findOne({ _id: req.query.id });
+            const users = await UserModel.findOne({ _id: req.query.id }).select('-password');
 
             res.status(200).json(users);
-        } catch (err) {
-            res.status(500).json(err);
-        }
-    }
-    if (method === "DELETE") {
-        try {
-            const result = await UsersListModel.findOneAndDelete({
-                _id: req.query.id,
-            });
-            res.status(200).json(result);
         } catch (err) {
             res.status(500).json(err);
         }

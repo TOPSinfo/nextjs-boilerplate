@@ -5,6 +5,7 @@ import { watchSignupRequest } from "./signup.saga";
 import { watchForgotRequest } from "./forgot.saga";
 import { watchResetRequest } from "./reset.saga";
 import userSaga from "./user.saga";
+import profileSaga from "./profile.saga";
 
 // Our worker Saga: will perform the async increment task
 export function* helloSaga() {
@@ -23,5 +24,6 @@ export default function* rootSaga() {
         watchForgotRequest(),
         watchResetRequest(),
         userSaga(),
+        profileSaga(),
     ]);
 }

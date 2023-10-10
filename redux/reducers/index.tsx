@@ -13,6 +13,7 @@ import {
 import { AuthActionTypes } from "../actions/login.action";
 import { RootState } from "../store";
 import { LOGOUT } from "../constant";
+import { getProfileReducer, updateProfileReducer } from "./profile.reducers";
 
 const appReducers = combineReducers({
     loginReducer,
@@ -25,9 +26,14 @@ const appReducers = combineReducers({
     updateUserReducer,
     deleteUserReducer,
     viewUserReducer,
+    getProfileReducer,
+    updateProfileReducer,
 });
 
-const rootReducer:Reducer = (state: CombinedState<RootState> | undefined, action: AuthActionTypes) => {
+const rootReducer: Reducer = (
+    state: CombinedState<RootState> | undefined,
+    action: AuthActionTypes
+) => {
     if (action.type === LOGOUT) {
         localStorage.clear();
         return appReducers(undefined, action);

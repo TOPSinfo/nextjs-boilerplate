@@ -16,7 +16,7 @@ const AppHeader = () => {
     const items: MenuProps["items"] = [
         {
             label: (
-                <Link href="/dashboard">
+                <Link href="/profile">
                     <Typography>Profile</Typography>
                 </Link>
             ),

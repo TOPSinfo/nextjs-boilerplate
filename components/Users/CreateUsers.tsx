@@ -106,11 +106,6 @@ const CreateUsers: React.FC<CreateUserProps> = ({ edit }) => {
                 id: userData?._id,
                 prefix: prefixData,
             };
-            setFileList({
-                uid: (userData as User)?.id,
-                name: (userData as User)?.firstName,
-                url: (userData as User)?.profilePic,
-            });
             setProfile([
                 {
                     uid: (userData as User)?.id,
@@ -132,6 +127,7 @@ const CreateUsers: React.FC<CreateUserProps> = ({ edit }) => {
         fileList: newFileList,
     }) => {
         setFileList(newFileList[0]?.originFileObj);
+        setProfile(newFileList);
     };
     // reset the form
     const handleCancel = () => {
@@ -160,7 +156,6 @@ const CreateUsers: React.FC<CreateUserProps> = ({ edit }) => {
             console.error("Validation error:", error);
         }
     };
-    // set form data
 
     return (
         <Layout.Content
