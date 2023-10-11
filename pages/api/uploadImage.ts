@@ -59,14 +59,14 @@ export default async function handler(
                     }`;
 
                     // You can save the file path to a database here if needed
-                    const image = await UserModel.findOneAndUpdate(
+                    await UserModel.findOneAndUpdate(
                         { _id: req.body.id },
                         { profilePic: filePath }
                     );
                     // Respond with the file path or URL
                     return res.status(200).json({
                         success: true,
-                        imageUrl: image?.profilePic,
+                        imageUrl: filePath,
                     });
                 }
             );

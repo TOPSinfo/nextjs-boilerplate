@@ -6,8 +6,13 @@ import Image from "next/image";
 import { CameraOutlined, UserOutlined } from "@ant-design/icons";
 import { useSession } from "next-auth/react";
 import EditProfile from "./EditProfile";
-import { getProfileRequest } from "@/redux/actions/profile.action";
-import { toast } from "react-toastify";
+import {
+    getProfileRequest,
+    updateProfileRequest,
+    uploadImageRequest,
+} from "@/redux/actions/profile.action";
+import dayjs from "dayjs";
+
 type User = {
     _id: string;
     username: string;
@@ -21,72 +26,106 @@ type User = {
     profilePic: string;
 };
 
+type UserDocument = {
+    user: {
+        id: string | number;
+        email: string;
+        username: string;
+    };
+};
+
+type Session = {
+    data: UserDocument | null;
+    status: string;
+    update: () => void;
+};
+
 const Profile: React.FC = () => {
-    const session = useSession();
+    const session: Session = useSession();
     const dispatch = useDispatch();
     const profileData = useSelector(
         (state: RootState) => state.getProfileReducer
     );
+    const updateProfile = useSelector(
+        (state: RootState) => state.updateProfileReducer
+    );
+    const profileImage = useSelector(
+        (state: RootState) => state.updateImageReducer
+    );
     const [editMode, setEditMode] = useState<boolean>(false);
     const [profile, setProfile] = useState<User | undefined>(undefined);
     const [profilePic, setProfilePic] = useState<string>("");
+    const [formData, setFormData] = useState<User | undefined>(undefined);
 
     const handleEditMode = () => {
         setEditMode(!editMode);
     };
     const handleFormSubmit = useCallback((values: User) => {
+        values._id = session?.data?.user?.id as string;
         // Submit the form data to update the user's profile
-        // You can use an API request or Redux actions here
         console.log("Form data submitted:", values);
-        handleEditMode(); // Switch back to display mode after submitting
+        dispatch(updateProfileRequest(values));
+        setEditMode(!editMode); // Switch back to display mode after submitting
     }, []);
+
     useEffect(() => {
         if (session?.data) {
-            dispatch(getProfileRequest(session?.data?.user?.id.toString()));
+            dispatch(getProfileRequest(session?.data?.user?.id as string));
         }
     }, [session?.data]);
+
     useEffect(() => {
         console.log("profile request", profileData);
         if (profileData?.user) {
             setProfile(profileData?.user);
+            if (session?.data) {
+                session.data.user.email = profileData?.user?.email;
+                session.data.user.username = profileData?.user?.username;
+            }
+            setFormData({
+                ...profileData?.user,
+                birth_date: profileData?.user.birth_date
+                    ? dayjs(profileData?.user?.birth_date)
+                    : undefined,
+            });
             setProfilePic(profileData?.user?.profilePic);
         }
     }, [profileData]);
+
+    useEffect(() => {
+        console.log("update profile", updateProfile);
+        if (updateProfile.user) {
+            if (session?.data) {
+                session.data.user.email = profileData?.user?.email;
+                session.data.user.username = profileData?.user?.username;
+            }
+            session.update();
+        }
+    }, [updateProfile]);
+
+    useEffect(() => {
+        if (profileImage?.profile) {
+            console.log("profileImageChanged", profileImage);
+            setProfilePic(profileImage?.profile.imageUrl);
+        }
+    }, [profileImage?.profile]);
 
     const handleImageUpload = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const file = e.target.files?.[0];
             if (file) {
-                // You can upload the file here and update the profilePic state
-                // For example, using FormData and an API request
-                const formData = new FormData();
-                formData.append("profilePic", file);
-                formData.append("id", profile?._id as string);
+                const profileImageData = {
+                    profilePic: file,
+                    _id: profile?._id as string,
+                };
 
                 // Perform an API request to upload the image and update the profilePic state
                 // Replace 'uploadImageApi' with your actual API endpoint for uploading images
-                fetch("/api/uploadImage", {
-                    method: "POST",
-                    body: formData,
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            setProfilePic(data.imageUrl);
-                            toast.success("Profile Image updated successfully");
-                        } else {
-                            console.error("Image upload failed:", data.error);
-                            toast.error(data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Image upload failed:", error);
-                    });
+                dispatch(uploadImageRequest(profileImageData));
             }
         },
-        []
+        [profilePic]
     );
-
     return (
         <Layout.Content className="bg-[#F0F2F5] pl-[80px] min-[992px]:pl-[200px] overflow-hidden overflow-hidden">
             <div className="bg-[#F0F2F5]">
@@ -156,7 +195,7 @@ const Profile: React.FC = () => {
                             </Card>
                             {editMode ? (
                                 <EditProfile
-                                    formData={profile}
+                                    formData={formData}
                                     onSubmit={handleFormSubmit}
                                 />
                             ) : (

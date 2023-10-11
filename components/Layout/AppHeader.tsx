@@ -13,6 +13,8 @@ const AppHeader = () => {
     const dispatch = useDispatch();
     const session = useSession();
     const [profile, setProfile] = useState<string>("");
+    const [profilePic, setProfilePic] = useState<string>("");
+
     const items: MenuProps["items"] = [
         {
             label: (
@@ -42,8 +44,9 @@ const AppHeader = () => {
         if (session?.data) {
             const data = session?.data?.user?.username;
             setProfile(data);
+            setProfilePic(session?.data?.user?.profilePic);
         }
-    }, [session]);
+    }, [session?.data]);
     return (
         <>
             <Header
@@ -69,10 +72,10 @@ const AppHeader = () => {
                         <div className="text-center">
                             {" "}
                             <Image
-                                className="inline-block"
+                                className="inline-block rounded-[25px]"
                                 width={50}
                                 height={50}
-                                src={"/images/avatar.png"}
+                                src={profilePic}
                                 alt="logo"
                                 priority
                             />{" "}

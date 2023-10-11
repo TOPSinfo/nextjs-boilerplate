@@ -6,10 +6,13 @@ import {
     GET_PROFILE_REQUEST,
     GET_PROFILE_SUCCESS,
     GET_PROFILE_FAIL,
+    UPLOAD_IMAGE_REQUEST,
+    UPLOAD_IMAGE_SUCCESS,
+    UPLOAD_IMAGE_FAIL,
 } from "../constant";
 
 type updateProfile = {
-    id: string;
+    _id: string;
     username: string;
     email: string;
     birth_date: string;
@@ -18,7 +21,11 @@ type updateProfile = {
     state: string;
     city: string;
     zip: string;
-    profile_pic: File;
+};
+
+type uploadImage = {
+    _id: string;
+    profilePic: File;
 };
 
 // type of request action for update profile
@@ -34,6 +41,22 @@ export interface UpdateProfileSuccessAction
 
 export interface UpdateProfileFailureAction
     extends Action<typeof UPDATE_PROFILE_FAIL> {
+    error: string;
+}
+
+// type of action to upload image
+export interface UploadImageRequestAction
+    extends Action<typeof UPLOAD_IMAGE_REQUEST> {
+    payload: { profile: uploadImage }; // Replace 'updateProfile' with your actual user data type
+}
+
+export interface UploadImageSuccessAction
+    extends Action<typeof UPLOAD_IMAGE_SUCCESS> {
+    payload: { profile: object }; // Replace 'object' with your actual user data type
+}
+
+export interface UploadImageFailureAction
+    extends Action<typeof UPLOAD_IMAGE_FAIL> {
     error: string;
 }
 
@@ -59,7 +82,10 @@ export type ProfileActionTypes =
     | UpdateProfileFailureAction
     | GetProfileRequestAction
     | GetProfileSuccessAction
-    | GetProfileFailureAction;
+    | GetProfileFailureAction
+    | UploadImageRequestAction
+    | UploadImageSuccessAction
+    | UploadImageFailureAction;
 
 // Export action creators for Update Profile
 export const updateProfileRequest = (
@@ -84,6 +110,31 @@ export const updateProfileFailure = (
     error: string
 ): UpdateProfileFailureAction => ({
     type: UPDATE_PROFILE_FAIL,
+    error,
+});
+
+export const uploadImageRequest = (
+    profile: uploadImage
+): UploadImageRequestAction => ({
+    type: UPLOAD_IMAGE_REQUEST,
+    payload: {
+        profile,
+    },
+});
+
+export const uploadImageSuccess = (
+    profile: object
+): UploadImageSuccessAction => ({
+    type: UPLOAD_IMAGE_SUCCESS,
+    payload: {
+        profile,
+    },
+});
+
+export const uploadImageFailure = (
+    error: string
+): UploadImageFailureAction => ({
+    type: UPLOAD_IMAGE_FAIL,
     error,
 });
 

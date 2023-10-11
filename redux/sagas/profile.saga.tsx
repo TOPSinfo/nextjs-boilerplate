@@ -1,5 +1,9 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { GET_PROFILE_REQUEST, UPDATE_PROFILE_REQUEST } from "../constant";
+import {
+    GET_PROFILE_REQUEST,
+    UPDATE_PROFILE_REQUEST,
+    UPLOAD_IMAGE_REQUEST,
+} from "../constant";
 import axios from "@/helpers/axios";
 import { hideLoader, showLoader } from "../actions/login.action";
 import { toast } from "react-toastify";
@@ -11,21 +15,16 @@ import {
     updateProfileFailure,
     updateProfileRequest,
     updateProfileSuccess,
+    uploadImageFailure,
+    uploadImageRequest,
+    uploadImageSuccess,
 } from "../actions/profile.action";
 
-type CreateUser = {
-    firstName: string;
-    email: string;
-    phone: string;
-    lastname: string;
-    gender: string;
-    profile_pic: File;
-};
 type UserState = {
-    user: CreateUser;
+    user: UpdateProfile;
 };
 type UpdateProfile = {
-    id: string;
+    _id: string;
     username: string;
     email: string;
     birth_date: string;
@@ -34,27 +33,27 @@ type UpdateProfile = {
     state: string;
     city: string;
     zip: string;
-    profile_pic: File;
 };
-
+type uploadImage = {
+    _id: string;
+    profilePic: File;
+};
 //  Replace with your API call function to update profile
 const updateProfile = async (user: UpdateProfile): Promise<UserState> => {
-    const formData = new FormData();
-    formData.append("email", user.email);
-    formData.append("username", user.username);
-    formData.append("birth_date", user.birth_date);
-    formData.append("gender", user.gender);
-    formData.append("address", user.address);
-    formData.append("state", user.state);
-    formData.append("city", user.city);
-    formData.append("zip", user.zip);
-    formData.append("profile_pic", user.profile_pic);
-    formData.append("id", user.id);
+    const userData = {
+        email: user.email,
+        username: user.username,
+        birth_date: user.birth_date,
+        gender: user.gender,
+        address: user.address,
+        state: user.state,
+        city: user.city,
+        zip: user.zip,
+        id: user._id,
+    };
 
     return await axios
-        .put(`/api/auth/profile`, formData, {
-            headers: { "Content-Type": "multipart/form" },
-        })
+        .put(`/api/auth/profile`, userData)
         .then(response => response.data)
         .catch(err => {
             throw err;
@@ -68,13 +67,46 @@ function* updateProfileSaga(
         const user = yield call(updateProfile, action.payload.user);
         yield put(updateProfileSuccess(user));
         toast.success("Profile updated successfully");
-        window.location.href = "/users";
     } catch (err: unknown) {
         if (err instanceof AxiosError) {
             // Now TypeScript recognizes err as AxiosError, and you can access err.response
             if (err.response) {
                 toast.error(err?.response?.data.message);
                 yield put(updateProfileFailure(err?.response?.data.message));
+            }
+        }
+    } finally {
+        yield put(hideLoader());
+    }
+}
+const uploadImage = async (profile: uploadImage) => {
+    const formData = new FormData();
+    formData.append("profilePic", profile.profilePic);
+    formData.append("id", profile?._id as string);
+
+    return await axios
+        .post(`/api/uploadImage`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then(response => response.data)
+        .catch(err => {
+            throw err;
+        });
+};
+function* uploadImageSaga(
+    action: ReturnType<typeof uploadImageRequest>
+): unknown {
+    yield put(showLoader());
+    try {
+        const profileData = yield call(uploadImage, action.payload.profile);
+        yield put(uploadImageSuccess(profileData));
+        toast.success("Profile Image updated successfully");
+    } catch (err: unknown) {
+        if (err instanceof AxiosError) {
+            // Now TypeScript recognizes err as AxiosError, and you can access err.response
+            if (err.response) {
+                toast.error(err?.response?.data.message);
+                yield put(uploadImageFailure(err?.response?.data.message));
             }
         }
     } finally {
@@ -117,6 +149,7 @@ function* GetProfileSaga(
 function* profileSaga() {
     yield takeEvery(UPDATE_PROFILE_REQUEST, updateProfileSaga);
     yield takeEvery(GET_PROFILE_REQUEST, GetProfileSaga);
+    yield takeEvery(UPLOAD_IMAGE_REQUEST, uploadImageSaga);
 }
 
 export default profileSaga;

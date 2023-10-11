@@ -4,6 +4,7 @@ import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import Credentials from "next-auth/providers/credentials";
 import { signJwtAccessToken } from "./jwt";
+import GoogleProvider from "next-auth/providers/google";
 
 export const nextauth: NextAuthOptions = {
     session: {
@@ -11,6 +12,10 @@ export const nextauth: NextAuthOptions = {
         maxAge: 3600,
     },
     providers: [
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        }),
         Credentials({
             id: "credentials",
             type: "credentials",
@@ -33,9 +38,10 @@ export const nextauth: NextAuthOptions = {
                 );
                 if (!passwordMatch) throw Error("password mismatch");
                 const user = {
-                    id: existingUser._id,
-                    username: existingUser.username,
-                    email: existingUser.email,
+                    id: existingUser?._id,
+                    username: existingUser?.username,
+                    email: existingUser?.email,
+                    profilePic: existingUser?.profilePic
                 };
                 const accessToken = signJwtAccessToken(user);
                 const result = { ...user, ...accessToken };
@@ -45,7 +51,41 @@ export const nextauth: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user }) {
+        async signIn({ user, account }) {
+            if (account?.provider === "google") {
+                const googleAuthData = {
+                    username: user.name,
+                    email: user.email,
+                    google_id: user.id,
+                    profilePic: user.image,
+                };
+                await connectDb();
+                const existingUser = await UserModel.findOne({
+                    email: user.email,
+                });
+                if (!existingUser) {
+                    await UserModel.create({
+                        ...googleAuthData,
+                    });
+                }
+                return true;
+            }
+            return true;
+        },
+        async jwt({ token, user, account }) {
+            if (account) {
+                const accessToken = signJwtAccessToken(user);
+                await connectDb();
+                const existingUser = await UserModel.findOne({
+                    email: user.email,
+                });
+                user.id = existingUser?._id.toString();
+                token.id = existingUser?._id.toString();
+                token.username = user.name;
+                token.accessToken = accessToken.accessToken;
+                token.refreshToken = accessToken.refreshToken;
+                token.profilePic = user.image;
+            }
             return { ...token, ...user };
         },
 

@@ -29,14 +29,14 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     }, [session?.data]);
 
     useEffect(() => {
-        if (loginData?.isLoggedIn) {
+        if (loginData?.isLoggedIn || session?.data?.user) {
             setIsAuth(true);
         } else if (loginData === null) {
             setIsAuth(null);
         } else {
             setIsAuth(false);
         }
-    }, []);
+    }, [loginData, session]);
     return (
         <>
             <Head>

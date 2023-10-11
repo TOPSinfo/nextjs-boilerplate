@@ -6,6 +6,9 @@ import {
     GET_PROFILE_REQUEST,
     GET_PROFILE_SUCCESS,
     GET_PROFILE_FAIL,
+    UPLOAD_IMAGE_REQUEST,
+    UPLOAD_IMAGE_SUCCESS,
+    UPLOAD_IMAGE_FAIL,
 } from "../constant";
 
 export interface UpdateProfile {
@@ -17,10 +20,18 @@ export interface GetProfile {
     user: object | null | undefined;
     error: string | null;
 }
+export interface UploadImage {
+    profile: object | null | undefined;
+    error: string | null;
+}
 
 // Define the initial  state
 const updateProfileState: UpdateProfile = {
     user: null,
+    error: null,
+};
+const uploadImageState: UploadImage = {
+    profile: null,
     error: null,
 };
 const getProfileState: GetProfile = {
@@ -51,6 +62,37 @@ export const updateProfileReducer = (
             return {
                 ...state,
                 user: null,
+                error: action.error,
+            };
+
+        default:
+            return state;
+    }
+};
+
+//upload image reducer function
+export const updateImageReducer = (
+    state = uploadImageState,
+    action: ProfileActionTypes
+): UploadImage => {
+    switch (action.type) {
+        case UPLOAD_IMAGE_REQUEST:
+            return {
+                ...state,
+                error: null,
+            };
+
+        case UPLOAD_IMAGE_SUCCESS:
+            return {
+                ...state,
+                profile: action.payload.profile,
+                error: null,
+            };
+
+        case UPLOAD_IMAGE_FAIL:
+            return {
+                ...state,
+                profile: null,
                 error: action.error,
             };
 

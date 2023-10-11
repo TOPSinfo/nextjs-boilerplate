@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { loginRequest } from "@/redux/actions/login.action";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { initializeAuthenticatedAxios } from "@/helpers/axios";
 import { useRefreshToken } from "@/libs/hooks/useRefreshtoken";
 
@@ -130,6 +130,25 @@ const Login: React.FC = () => {
                                         Forgot Password?
                                     </Link>
                                 </Form.Item>
+                            </Col>
+                            <Col xs={24}>
+                                <Button
+                                    className="px-7 py-6 text-[#3e79f7] font-medium text-sm leading-snug capitalize rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center mb-3"
+                                    style={{ backgroundColor: "#fff" }}
+                                    onClick={() =>
+                                        signIn("google", {
+                                            callbackUrl: "/dashboard",
+                                        })
+                                    }
+                                >
+                                    <img
+                                        className="pr-2"
+                                        src="/images/google.png"
+                                        alt=""
+                                        style={{ height: "2rem" }}
+                                    />
+                                    Continue with Google
+                                </Button>
                             </Col>
                         </Row>
                     </Form>

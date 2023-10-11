@@ -462,9 +462,7 @@ const Forms: React.FC = () => {
                                                                 "Password must have a minimum length of 8",
                                                         },
                                                         {
-                                                            pattern: new RegExp(
-                                                                "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
-                                                            ),
+                                                            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                                                             message:
                                                                 "Password must contain at least one lowercase letter, uppercase letter, number, and special character",
                                                         },

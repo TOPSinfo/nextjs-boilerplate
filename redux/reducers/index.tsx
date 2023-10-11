@@ -13,7 +13,7 @@ import {
 import { AuthActionTypes } from "../actions/login.action";
 import { RootState } from "../store";
 import { LOGOUT } from "../constant";
-import { getProfileReducer, updateProfileReducer } from "./profile.reducers";
+import { getProfileReducer, updateProfileReducer, updateImageReducer } from "./profile.reducers";
 
 const appReducers = combineReducers({
     loginReducer,
@@ -28,6 +28,7 @@ const appReducers = combineReducers({
     viewUserReducer,
     getProfileReducer,
     updateProfileReducer,
+    updateImageReducer,
 });
 
 const rootReducer: Reducer = (

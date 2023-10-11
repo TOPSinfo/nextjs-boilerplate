@@ -13,6 +13,7 @@ export interface UserDocument extends Document {
     city: string;
     zip: string;
     profilePic: string;
+    google_id: string;
     comparePassword(password: string): Promise<boolean>;
 }
 interface Methods {
@@ -23,7 +24,7 @@ const userSchema = new Schema<UserDocument, Methods>(
     {
         email: { type: String, required: true, unique: true },
         username: { type: String, required: true },
-        password: { type: String, required: true },
+        password: { type: String },
         resetToken: { type: String },
         birth_date: { type: String },
         gender: { type: String },
@@ -32,6 +33,7 @@ const userSchema = new Schema<UserDocument, Methods>(
         city: { type: String },
         zip: { type: String },
         profilePic: { type: String },
+        google_id: { type: String },
     },
     {
         timestamps: true,
